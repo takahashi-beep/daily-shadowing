@@ -7,20 +7,21 @@ from openai import OpenAI
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (
     Attachment,
+    Disposition,
     FileContent,
     FileName,
     FileType,
-    Disposition,
     Mail,
 )
 
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
+# アジア・多国籍アクセントのマップ
 ACCENTS = {
-    '米国': {'tld': 'com', 'lang': 'en'},
-    '英国': {'tld': 'co.uk', 'lang': 'en'},
     'インド': {'tld': 'co.in', 'lang': 'en'},
     'シンガポール': {'tld': 'com.sg', 'lang': 'en'},
+    'フィリピン': {'tld': 'com.ph', 'lang': 'en'},
+    '英国': {'tld': 'co.uk', 'lang': 'en'},
     'オーストラリア': {'tld': 'com.au', 'lang': 'en'},
 }
 
@@ -35,7 +36,7 @@ prompt = f"""
 1. **テーマ**: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。
 2. **ビジネス要素の強化**: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。
 3. **語数・難易度**: 150〜180語程度。CEFR B2〜C1レベル。
-4. **アクセント指定**: 今回は「{selected_country}」を指定して作成してください。
+4. **アクセント指定**: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。
 5. **注釈（単語リスト）**: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。
 
 ### 出力フォーマット：
@@ -61,19 +62,58 @@ response = client.chat.completions.create(
 
 generated_text = response.choices[0].message.content
 
+# 【Pitch Script】の英文テキストのみを抽出
 pitch_match = re.search(
-    r'【Pitch Script】\n(.*?)\n\n【Vocabulary', generated_text, re.DOTALL
+    r'【Pitch Script】\s*\n(.*?)(?=\n\s*【Vocabulary|\Z)', generated_text, re.DOTALL
 )
-pitch_script = pitch_match.group(1) if pitch_match else generated_text
 
-tts = gTTS(text=pitch_script, lang=accent_info['lang'], tld=accent_info['tld'])
+if pitch_match:
+  pitch_script = pitch_match.group(1).strip()
+else:
+  try:
+    start = generated_text.index('【Pitch Script】') + len('【Pitch Script】')
+    end = generated_text.index('【Vocabulary')
+    pitch_script = generated_text[start:end].strip()
+  except ValueError:
+    pitch_script = generated_text
+
+# --- 2パターンの音声を生成して1つに連結 ---
+
+# 1. パート1：標準的な米国英語 (Standard American English)
+gTTS(text='First, Standard American accent.', lang='en', tld='com').save(
+    'part1_intro.mp3'
+)
+gTTS(text=pitch_script, lang='en', tld='com').save('part1_script.mp3')
+
+# 2. パート2：本日ターゲットのアクセント (例: シンガポール、インド等)
+gTTS(
+    text=f'Next, {selected_country} accent.', lang='en', tld='com'
+).save('part2_intro.mp3')
+gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(
+    'part2_script.mp3'
+)
+
+# 3. 4つの音声トラックを順番に1つのMP3ファイルへ結合
 audio_file = 'shadowing_pitch.mp3'
-tts.save(audio_file)
+parts = [
+    'part1_intro.mp3',
+    'part1_script.mp3',
+    'part2_intro.mp3',
+    'part2_script.mp3',
+]
 
+with open(audio_file, 'wb') as outfile:
+  for p in parts:
+    with open(p, 'rb') as infile:
+      outfile.write(infile.read())
+
+# メール送信処理
 message = Mail(
     from_email=os.environ.get('FROM_EMAIL'),
     to_emails=os.environ.get('TO_EMAIL'),
-    subject=f'【Daily Shadowing】{selected_country}アクセント - 科学技術ピッチ',
+    subject=(
+        f'【Daily Shadowing】標準アメリカ英語 ＆ {selected_country}アクセント'
+    ),
     plain_text_content=generated_text,
 )
 
