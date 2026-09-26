@@ -3,7 +3,7 @@ name: Daily Shadowing Mailer
 on:
   schedule:
     # UTC 22:45 = 日本時間(JST) 朝7:45
-    - cron: '45 22 * * *'
+    - cron: '45 20 * * *'
   workflow_dispatch:
 
 jobs:
