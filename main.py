@@ -1,4 +1,5 @@
 import base64
+import html
 import os
 import random
 import re
@@ -14,9 +15,18 @@ from sendgrid.helpers.mail import (
     Mail,
 )
 
+# 1. OpenAI クライアント初期化
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
-# アジア・多国籍アクセントのマップ
+# GitHub Pages 用の URL を動的に構築
+repo = os.environ.get('GITHUB_REPOSITORY', '')
+user_name = repo.split('/')[0] if '/' in repo else ''
+repo_name = repo.split('/')[1] if '/' in repo else ''
+page_url = (
+    f'https://{user_name}.github.io/{repo_name}/' if repo else 'Local Test'
+)
+
+# 2. アクセント選択
 ACCENTS = {
     'インド': {'tld': 'co.in', 'lang': 'en'},
     'シンガポール': {'tld': 'com.sg', 'lang': 'en'},
@@ -28,6 +38,7 @@ ACCENTS = {
 selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
+# 3. プロンプト定義と生成
 prompt = f"""
 あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。
 以下の条件に従って、シャドーイング練習用の英語スクリプトと単語解説を作成してください。
@@ -62,7 +73,7 @@ response = client.chat.completions.create(
 
 generated_text = response.choices[0].message.content
 
-# 【Pitch Script】の英文テキストのみを抽出
+# 4. 【Pitch Script】の本文のみ抽出
 pitch_match = re.search(
     r'【Pitch Script】\s*\n(.*?)(?=\n\s*【Vocabulary|\Z)', generated_text, re.DOTALL
 )
@@ -77,15 +88,13 @@ else:
   except ValueError:
     pitch_script = generated_text
 
-# --- 2パターンの音声を生成して1つに連結 ---
+# 5. 音声合成＆MP3結合（公開用フォルダ public へ出力）
+os.makedirs('public', exist_ok=True)
 
-# 1. パート1：標準的な米国英語 (Standard American English)
 gTTS(text='First, Standard American accent.', lang='en', tld='com').save(
     'part1_intro.mp3'
 )
 gTTS(text=pitch_script, lang='en', tld='com').save('part1_script.mp3')
-
-# 2. パート2：本日ターゲットのアクセント (例: シンガポール、インド等)
 gTTS(
     text=f'Next, {selected_country} accent.', lang='en', tld='com'
 ).save('part2_intro.mp3')
@@ -93,8 +102,7 @@ gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(
     'part2_script.mp3'
 )
 
-# 3. 4つの音声トラックを順番に1つのMP3ファイルへ結合
-audio_file = 'shadowing_pitch.mp3'
+audio_path = 'public/audio.mp3'
 parts = [
     'part1_intro.mp3',
     'part1_script.mp3',
@@ -102,35 +110,118 @@ parts = [
     'part2_script.mp3',
 ]
 
-with open(audio_file, 'wb') as outfile:
+with open(audio_path, 'wb') as outfile:
   for p in parts:
     with open(p, 'rb') as infile:
       outfile.write(infile.read())
 
-# メール送信処理
+# 6. HTML（速度切り替えボタン付きWebページ）の作成
+html_content = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Shadowing App</title>
+<style>
+  body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f8f9fa; }}
+  .card {{ background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }}
+  .tag {{ display: inline-block; background: #e3f2fd; color: #0d47a1; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9em; }}
+  
+  .sticky-player {{ position: sticky; top: 10px; z-index: 100; background: #212529; color: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-bottom: 24px; }}
+  .player-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }}
+  .player-title {{ font-weight: bold; font-size: 0.9em; color: #adb5bd; }}
+  
+  .speed-controls {{ display: flex; gap: 6px; }}
+  .speed-btn {{ background: #343a40; color: #fff; border: 1px solid #495057; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85em; transition: all 0.2s; }}
+  .speed-btn:hover {{ background: #495057; }}
+  .speed-btn.active {{ background: #0d6efd; border-color: #0d6efd; font-weight: bold; }}
+  
+  audio {{ width: 100%; }}
+  h2 {{ color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }}
+  .script-text {{ font-size: 1.15em; line-height: 1.8; color: #212529; white-space: pre-wrap; }}
+  .vocab-list {{ white-space: pre-wrap; font-size: 0.95em; background: #f1f3f5; padding: 16px; border-radius: 8px; }}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🎧 Daily Shadowing</h1>
+  <span class="tag">アクセント: 標準アメリカ ＆ {selected_country}</span>
+</div>
+
+<div class="sticky-player">
+  <div class="player-header">
+    <div class="player-title">PLAYER</div>
+    <div class="speed-controls">
+      <button class="speed-btn" onclick="setSpeed(0.8, this)">0.8x</button>
+      <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x</button>
+      <button class="speed-btn" onclick="setSpeed(1.2, this)">1.2x</button>
+      <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
+    </div>
+  </div>
+  <audio id="audio-player" controls src="audio.mp3" autoplay></audio>
+</div>
+
+<div class="card">
+  <h2>Pitch Script (原稿)</h2>
+  <div class="script-text">{html.escape(pitch_script)}</div>
+</div>
+
+<div class="card">
+  <h2>全文テキスト＆注釈・解説</h2>
+  <div class="vocab-list">{html.escape(generated_text)}</div>
+</div>
+
+<script>
+  function setSpeed(rate, btn) {{
+    const audio = document.getElementById('audio-player');
+    audio.playbackRate = rate;
+    
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }}
+</script>
+
+</body>
+</html>
+"""
+
+with open('public/index.html', 'w', encoding='utf-8') as f:
+  f.write(html_content)
+
+# 7. メール送信（WebページのURLを案内）
+email_body = f"""本日のシャドーイング教材が更新されました！
+
+以下の専用Webページを開くと、音声を再生（速度変更機能つき）しながらスクリプトをスムーズに閲覧できます。
+
+👉 今日の学習ページを開く:
+{page_url}
+
+---
+【メール版テキスト】
+{generated_text}
+"""
+
 message = Mail(
     from_email=os.environ.get('FROM_EMAIL'),
     to_emails=os.environ.get('TO_EMAIL'),
     subject=(
         f'【Daily Shadowing】標準アメリカ英語 ＆ {selected_country}アクセント'
     ),
-    plain_text_content=generated_text,
+    plain_text_content=email_body,
 )
 
-with open(audio_file, 'rb') as f:
+with open(audio_path, 'rb') as f:
   data = f.read()
 
-encoded_file = base64.b64encode(data).decode()
-
-attached_file = Attachment(
-    FileContent(encoded_file),
+message.attachment = Attachment(
+    FileContent(base64.b64encode(data).decode()),
     FileName('shadowing_pitch.mp3'),
     FileType('audio/mpeg'),
     Disposition('attachment'),
 )
-message.attachment = attached_file
 
 sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 sg.send(message)
 
-print('メール送信が完了しました！')
+print('Webサイト生成＆メール送信が完了しました！')
