@@ -9,11 +9,13 @@ from openai import OpenAI
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (
     Attachment,
+    ClickTracking,
     Disposition,
     FileContent,
     FileName,
     FileType,
     Mail,
+    TrackingSettings,
 )
 
 # 1. OpenAI クライアント初期化
@@ -207,7 +209,7 @@ html_content = f"""<!DOCTYPE html>
 with open('public/index.html', 'w', encoding='utf-8') as f:
   f.write(html_content)
 
-# 7. メール送信（パラメータ付きURLでキャッシュ回避）
+# 7. メール送信（トラッキング無効化＆直リンク指定）
 email_body = f"""本日のシャドーイング教材が更新されました！
 
 以下の専用Webページを開くと、音声を再生（速度変更機能つき）しながらスクリプトをスムーズに閲覧できます。
@@ -228,6 +230,13 @@ message = Mail(
     ),
     plain_text_content=email_body,
 )
+
+# SendGridのクリックトラッキングを無効化（直リンクを維持する）
+tracking_settings = TrackingSettings()
+tracking_settings.click_tracking = ClickTracking(
+    enable=False, enable_text=False
+)
+message.tracking_settings = tracking_settings
 
 with open(audio_path, 'rb') as f:
   data = f.read()
