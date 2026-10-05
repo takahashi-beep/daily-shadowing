@@ -1,10 +1,13 @@
-name: Daily Shadowing Mailer
+name: Daily Shadowing Mailer & Web Page
 
 on:
   schedule:
-    # UTC 22:45 = 日本時間(JST) 朝7:45
-    - cron: '45 20 * * *'
+    # UTC 22:00 = 日本時間(JST) 朝7:00
+    - cron: '0 22 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -22,10 +25,17 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: スクリプト実行
+      - name: スクリプト実行＆HTML生成
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python main.py
+
+      - name: Webサイト(GitHub Pages)へ自動デプロイ
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
