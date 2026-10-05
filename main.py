@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime, timedelta, timezone
 import html
 import os
 import random
@@ -18,13 +19,18 @@ from sendgrid.helpers.mail import (
 # 1. OpenAI クライアント初期化
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
-# GitHub Pages 用の URL を動的に構築
+# 日本時間の現在日付・タイムスタンプ取得
+jst = timezone(timedelta(hours=9))
+now = datetime.now(jst)
+date_str = now.strftime('%Y-%m-%d')
+timestamp = int(now.timestamp())
+
+# GitHub Pages 用の URL 構築
 repo = os.environ.get('GITHUB_REPOSITORY', '')
 user_name = repo.split('/')[0] if '/' in repo else ''
 repo_name = repo.split('/')[1] if '/' in repo else ''
-page_url = (
-    f'https://{user_name}.github.io/{repo_name}/' if repo else 'Local Test'
-)
+base_url = f'https://{user_name}.github.io/{repo_name}/' if repo else ''
+page_url = f'{base_url}?v={timestamp}' if base_url else 'Local Test'
 
 # 2. アクセント選択
 ACCENTS = {
@@ -102,7 +108,8 @@ gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(
     'part2_script.mp3'
 )
 
-audio_path = 'public/audio.mp3'
+audio_filename = f'audio_{date_str}.mp3'
+audio_path = f'public/{audio_filename}'
 parts = [
     'part1_intro.mp3',
     'part1_script.mp3',
@@ -115,17 +122,26 @@ with open(audio_path, 'wb') as outfile:
     with open(p, 'rb') as infile:
       outfile.write(infile.read())
 
-# 6. HTML（速度切り替えボタン付きWebページ）の作成
+# バックアップとして最新用audio.mp3も保存
+with open('public/audio.mp3', 'wb') as outfile:
+  with open(audio_path, 'rb') as infile:
+    outfile.write(infile.read())
+
+# 6. HTML（キャッシュ対策・速度切り替えボタン付きWebページ）の作成
 html_content = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Shadowing App</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daily Shadowing App ({date_str})</title>
 <style>
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f8f9fa; }}
   .card {{ background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }}
   .tag {{ display: inline-block; background: #e3f2fd; color: #0d47a1; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9em; }}
+  .date-badge {{ font-size: 0.85em; color: #6c757d; margin-left: 8px; }}
   
   .sticky-player {{ position: sticky; top: 10px; z-index: 100; background: #212529; color: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-bottom: 24px; }}
   .player-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }}
@@ -147,6 +163,7 @@ html_content = f"""<!DOCTYPE html>
 <div class="card">
   <h1>🎧 Daily Shadowing</h1>
   <span class="tag">アクセント: 標準アメリカ ＆ {selected_country}</span>
+  <span class="date-badge">📅 {date_str}</span>
 </div>
 
 <div class="sticky-player">
@@ -159,7 +176,7 @@ html_content = f"""<!DOCTYPE html>
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio.mp3" autoplay></audio>
+  <audio id="audio-player" controls src="{audio_filename}?v={timestamp}" autoplay></audio>
 </div>
 
 <div class="card">
@@ -186,10 +203,11 @@ html_content = f"""<!DOCTYPE html>
 </html>
 """
 
+# トップページ用 (index.html) の書き出し
 with open('public/index.html', 'w', encoding='utf-8') as f:
   f.write(html_content)
 
-# 7. メール送信（WebページのURLを案内）
+# 7. メール送信（パラメータ付きURLでキャッシュ回避）
 email_body = f"""本日のシャドーイング教材が更新されました！
 
 以下の専用Webページを開くと、音声を再生（速度変更機能つき）しながらスクリプトをスムーズに閲覧できます。
