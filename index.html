@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Shadowing App</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f8f9fa; }
+  .card { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .tag { display: inline-block; background: #e3f2fd; color: #0d47a1; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9em; }
+  
+  .sticky-player { position: sticky; top: 10px; z-index: 100; background: #212529; color: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-bottom: 24px; }
+  .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .player-title { font-weight: bold; font-size: 0.9em; color: #adb5bd; }
+  
+  .speed-controls { display: flex; gap: 6px; }
+  .speed-btn { background: #343a40; color: #fff; border: 1px solid #495057; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85em; transition: all 0.2s; }
+  .speed-btn:hover { background: #495057; }
+  .speed-btn.active { background: #0d6efd; border-color: #0d6efd; font-weight: bold; }
+  
+  audio { width: 100%; }
+  h2 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }
+  .script-text { font-size: 1.15em; line-height: 1.8; color: #212529; white-space: pre-wrap; }
+  .vocab-list { white-space: pre-wrap; font-size: 0.95em; background: #f1f3f5; padding: 16px; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🎧 Daily Shadowing</h1>
+  <span class="tag">アクセント: 標準アメリカ ＆ 英国</span>
+</div>
+
+<div class="sticky-player">
+  <div class="player-header">
+    <div class="player-title">PLAYER</div>
+    <div class="speed-controls">
+      <button class="speed-btn" onclick="setSpeed(0.8, this)">0.8x</button>
+      <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x</button>
+      <button class="speed-btn" onclick="setSpeed(1.2, this)">1.2x</button>
+      <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
+    </div>
+  </div>
+  <audio id="audio-player" controls src="audio.mp3" autoplay></audio>
+</div>
+
+<div class="card">
+  <h2>Pitch Script (原稿)</h2>
+  <div class="script-text">Good morning, esteemed investors. Today, I&#x27;m here to introduce you to InnovateX, a pioneering startup revolutionizing renewable energy storage. The problem we&#x27;re addressing is the inefficiency of current energy storage systems, which limits the scalability of renewable resources. Our business model centers around a patented nanotechnology solution that enhances battery capacity by 50%, thereby reducing costs by 30%. The global renewable energy market is projected to reach $1.5 trillion by 2030, and InnovateX is poised to claim a substantial share. Our unique technology creates significant barriers to entry for competitors, safeguarding our market position. We&#x27;ve successfully completed a pilot program, demonstrating a 90% improvement in energy retention. With your investment, we plan to scale production, enhance our R&amp;D, and accelerate market penetration. Join us in this transformative journey towards a sustainable future. Thank you.</div>
+</div>
+
+<div class="card">
+  <h2>全文テキスト＆注釈・解説</h2>
+  <div class="vocab-list">---
+【今日のアクセント指定】  
+英国
+
+【Pitch Script】  
+Good morning, esteemed investors. Today, I&#x27;m here to introduce you to InnovateX, a pioneering startup revolutionizing renewable energy storage. The problem we&#x27;re addressing is the inefficiency of current energy storage systems, which limits the scalability of renewable resources. Our business model centers around a patented nanotechnology solution that enhances battery capacity by 50%, thereby reducing costs by 30%. The global renewable energy market is projected to reach $1.5 trillion by 2030, and InnovateX is poised to claim a substantial share. Our unique technology creates significant barriers to entry for competitors, safeguarding our market position. We&#x27;ve successfully completed a pilot program, demonstrating a 90% improvement in energy retention. With your investment, we plan to scale production, enhance our R&amp;D, and accelerate market penetration. Join us in this transformative journey towards a sustainable future. Thank you.
+
+【Vocabulary &amp; Key Phrases】  
+1. InnovateX (ˈɪnəʊveɪt eks) : イノベートX  
+   - 解説: 会社名やプロジェクト名は特に説明がないが、コンテクストでは新規事業や新技術を示す。
+
+2. Scalability (ˌskeɪləˈbɪlɪti) : スケーラビリティ  
+   - 解説: システムやプロジェクトが拡張可能である度合いを指す。
+
+3. Patented (ˈpætəntɪd) : 特許を取得した  
+   - 解説: 法的に保護された発明や技術。
+
+4. Nanotechnology (ˌnænəʊtɛkˈnɒlədʒi) : ナノテクノロジー  
+   - 解説: 原子や分子を操作する技術分野。
+
+5. Barrier to entry (ˈbæriər tu ˈɛntri) : 参入障壁  
+   - 解説: 新規参入者が市場に入りにくくする要因。
+
+6. Market penetration (ˈmɑːrkɪt ˌpenɪˈtreɪʃən) : 市場浸透  
+   - 解説: 商品やサービスが市場で広く受け入れられる過程。
+
+【日本語訳】  
+おはようございます、尊敬する投資家の皆様。本日は、再生可能エネルギーの蓄電に革新をもたらす先駆的なスタートアップ、イノベートXをご紹介します。我々が解決する課題は、現在のエネルギー蓄電システムの非効率性であり、それが再生可能資源の拡大を制限しています。ビジネスモデルは、バッテリー容量を50%向上させ、コストを30%削減する特許取得済みのナノテクノロジーソリューションを中心にしています。グローバル再生可能エネルギー市場は2030年までに1.5兆ドルに達すると予測されており、イノベートXはその大きなシェアを占める準備ができています。我々の独自技術は競争相手に対して大きな参入障壁を確立し、市場での位置を保護します。パイロットプログラムを成功裏に完了し、エネルギー保持を90%改善する成果を示しました。皆様のご投資で生産を拡大し、研究開発を強化し、市場への浸透を加速させたいと考えています。この持続可能な未来への変革の旅にご参加ください。ありがとうございます。
+---</div>
+</div>
+
+<script>
+  function setSpeed(rate, btn) {
+    const audio = document.getElementById('audio-player');
+    audio.playbackRate = rate;
+    
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
