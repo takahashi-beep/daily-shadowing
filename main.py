@@ -48,7 +48,7 @@ selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
 # 3. プロンプト定義と生成
-prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、および内容理解確認クイズをJSON形式で作成してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。\n7. スラッシュリーディング・強音表示テキスト: 意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (question, options, answer, explanation を持つ配列)"
+prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、および内容理解確認クイズをJSON形式で作成してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。\n7. スラッシュリーディング・強音表示テキスト: 意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n\nJSONキー: pitch_script (文字列), key_sentences (文字列), slash_script (文字列), vocabulary (文字列), japanese_translation (文字列), quiz (question, options, answer, explanation を持つ配列)"
 
 response = client.chat.completions.create(
     model='gpt-4o',
@@ -71,18 +71,35 @@ except Exception:
 
 pitch_script = (
     data.get('pitch_script', '').strip()
-    or 'Failed to generate pitch script.'
+    if isinstance(data.get('pitch_script'), str)
+    else 'Failed to generate pitch script.'
 )
-key_sentences = data.get('key_sentences', '').strip() or pitch_script[:100]
-slash_script = data.get('slash_script', '').strip() or pitch_script
+
+# key_sentences の安全な取得（文字列・リスト両対応）
+raw_key = data.get('key_sentences', '')
+if isinstance(raw_key, list):
+  key_sentences = ' '.join(raw_key).strip()
+elif isinstance(raw_key, str):
+  key_sentences = raw_key.strip()
+else:
+  key_sentences = pitch_script[:100]
+
+slash_script = (
+    data.get('slash_script', '').strip()
+    if isinstance(data.get('slash_script'), str)
+    else pitch_script
+)
 vocabulary = (
-    data.get('vocabulary', '').strip() or 'No vocabulary generated.'
+    data.get('vocabulary', '').strip()
+    if isinstance(data.get('vocabulary'), str)
+    else 'No vocabulary generated.'
 )
 japanese_translation = (
     data.get('japanese_translation', '').strip()
-    or 'No translation generated.'
+    if isinstance(data.get('japanese_translation'), str)
+    else 'No translation generated.'
 )
-quiz_data = data.get('quiz', [])
+quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
 
 # 文単位での分割
 sentence_list = [
