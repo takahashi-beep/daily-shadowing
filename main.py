@@ -47,8 +47,8 @@ ACCENTS = {
 selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
-# 3. プロンプト定義と生成
-prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、および内容理解確認クイズをJSON形式で作成してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n\nJSONキー: pitch_script (文字列), key_sentences (スラッシュと<b>タグ付き文字列), slash_script (スラッシュと<b>タグ付き文字列), vocabulary (文字列), japanese_translation (文字列), quiz (question, options, answer, explanation を持つ配列)"
+# 3. プロンプト定義と生成（リンキング穴埋めディクテーションを追加）
+prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、およびリンキング特化型ディクテーション問題を作成し、JSON形式で出力してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n9. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（穴埋め部分は [ _____ ] と表記）、正解フレーズ、カタカナ発音イメージヒント、日本語の発音変化解説を含めること。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (配列: question, options, answer, explanation), linking_dictation (配列: sentence_with_blank, answer, target_text, hint, explanation)"
 
 response = client.chat.completions.create(
     model='gpt-4o',
@@ -99,8 +99,12 @@ japanese_translation = (
     else 'No translation generated.'
 )
 quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
+linking_data = (
+    data.get('linking_dictation', [])
+    if isinstance(data.get('linking_dictation'), list)
+    else []
+)
 
-# 音声読み上げ用にHTMLタグを除去したプレーンテキスト版の Key Sentence を用意
 clean_key_sentences = re.sub(r'<[^>]+>', '', key_sentences).replace('/', '')
 
 sentence_list = [
@@ -156,6 +160,7 @@ with open('public/audio.mp3', 'wb') as outfile:
 
 # 5. HTML作成
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
+linking_json_str = json.dumps(linking_data, ensure_ascii=False)
 sentences_json_str = json.dumps(sentence_list, ensure_ascii=False)
 
 html_content = f"""<!DOCTYPE html>
@@ -210,13 +215,19 @@ html_content = f"""<!DOCTYPE html>
   .quiz-opt.incorrect {{ background: #f8d7da; border-color: #842029; color: #842029; }}
   .quiz-exp {{ margin-top: 8px; padding: 10px; background: #e2e3e5; border-radius: 6px; font-size: 0.9em; display: none; }}
 
+  /* リンキングディクテーション用スタイル */
+  .linking-item {{ background: #f8f9fa; border: 1px solid #e9ecef; padding: 16px; border-radius: 8px; margin-bottom: 16px; }}
+  .linking-q {{ font-size: 1.05em; margin-bottom: 8px; line-height: 1.6; }}
+  .linking-input-group {{ display: flex; gap: 8px; margin: 10px 0; }}
+  .linking-input {{ flex: 1; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 1em; }}
+  .linking-hint {{ font-size: 0.85em; color: #6c757d; margin-bottom: 6px; }}
+
   details {{ background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }}
   summary {{ padding: 18px 24px; font-weight: bold; font-size: 1.1em; color: #1a237e; cursor: pointer; background: #fff; user-select: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }}
   summary::-webkit-details-marker {{ display: none; }}
   summary::after {{ content: "▼"; font-size: 0.8em; color: #6c757d; transition: transform 0.2s; }}
   details[open] summary::after {{ transform: rotate(180deg); }}
   .details-content {{ padding: 0 24px 24px 24px; border-top: 1px solid #f1f3f5; }}
-  textarea {{ width: 100%; height: 120px; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 1em; box-sizing: border-box; resize: vertical; margin-top: 10px; font-family: inherit; }}
 </style>
 </head>
 <body>
@@ -256,7 +267,7 @@ html_content = f"""<!DOCTYPE html>
   <div class="slash-text">{slash_script}</div>
 </div>
 
-<!-- 3. 今日の重点シャドーイング練習センテンス（スラッシュ＆青太字表示・再生ボタン付き） -->
+<!-- 3. 今日の重点シャドーイング練習センテンス -->
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
@@ -271,23 +282,21 @@ html_content = f"""<!DOCTYPE html>
   <div id="quiz-container"></div>
 </div>
 
-<!-- 5. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
+<!-- 5. リンキング穴埋めディクテーション（スマホ対応・3問） -->
+<details open>
+  <summary>✍️ Linking Dictation (3 Questions)</summary>
+  <div class="details-content">
+    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音がつながって聞こえるリンキング（連結・脱落）部分の穴埋め問題です。再生ボタンで音声を聞いて入力してみましょう。</p>
+    <div id="linking-container"></div>
+  </div>
+</details>
+
+<!-- 6. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
 <details>
   <summary>🗣️ Sentence-by-Sentence Shadowing (Option)</summary>
   <div class="details-content">
     <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">1文ずつじっくり聞いてシャドーイングの練習をしたい時にご活用ください。</p>
     <div id="sentence-container" style="margin-top: 10px;"></div>
-  </div>
-</details>
-
-<!-- 6. Dictation Exercise (Option / 折りたたみ) -->
-<details>
-  <summary>✍️ Dictation Exercise (Option)</summary>
-  <div class="details-content">
-    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音声を聞きながら、聞き取れた英文を入力してみましょう。完了したら「答え合わせ」ボタンを押して原稿と比較できます。</p>
-    <textarea id="dictation-input" placeholder="Type what you hear..."></textarea>
-    <button onclick="toggleAnswer()" style="margin-top: 10px; background: #0d6efd; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">答え合わせ（原稿を表示）</button>
-    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">{html.escape(pitch_script)}</div>
   </div>
 </details>
 
@@ -314,6 +323,63 @@ html_content = f"""<!DOCTYPE html>
     utter.lang = 'en-US';
     utter.rate = currentSpeed;
     window.speechSynthesis.speak(utter);
+  }}
+
+  // リンキングディクテーションの動的生成
+  const linkingData = {linking_json_str};
+  const linkingContainer = document.getElementById('linking-container');
+
+  if (linkingData && linkingData.length > 0) {{
+    linkingData.forEach((item, idx) => {{
+      const div = document.createElement('div');
+      div.className = 'linking-item';
+
+      const playBtn = document.createElement('button');
+      playBtn.className = 'play-sentence-btn';
+      playBtn.innerHTML = '▶ 音声を聴く';
+      playBtn.onclick = () => playText(item.sentence_with_blank.replace('[ _____ ]', item.answer));
+
+      const qText = document.createElement('div');
+      qText.className = 'linking-q';
+      qText.style.marginTop = '8px';
+      qText.innerHTML = '<strong>Q' + (idx+1) + ':</strong> ' + item.sentence_with_blank;
+
+      const hintText = document.createElement('div');
+      hintText.className = 'linking-hint';
+      hintText.textContent = '💡 ヒント (聞こえ方のイメージ): ' + (item.hint || '音声を聞いて穴埋めしてください');
+
+      const inputGroup = document.createElement('div');
+      inputGroup.className = 'linking-input-group';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'linking-input';
+      input.placeholder = 'Type the missing words...';
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'play-sentence-btn';
+      checkBtn.style.background = '#0d6efd';
+      checkBtn.textContent = '答え合わせ';
+
+      const expDiv = document.createElement('div');
+      expDiv.className = 'quiz-exp';
+      expDiv.innerHTML = '<strong>正解:</strong> <span style="color:#0d6efd; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+
+      checkBtn.onclick = () => {{
+        expDiv.style.display = 'block';
+      }};
+
+      inputGroup.appendChild(input);
+      inputGroup.appendChild(checkBtn);
+
+      div.appendChild(playBtn);
+      div.appendChild(qText);
+      div.appendChild(hintText);
+      div.appendChild(inputGroup);
+      div.appendChild(expDiv);
+
+      linkingContainer.appendChild(div);
+    }});
   }}
 
   const sentenceList = {sentences_json_str};
@@ -384,11 +450,6 @@ html_content = f"""<!DOCTYPE html>
       quizContainer.appendChild(itemDiv);
     }});
   }}
-
-  function toggleAnswer() {{
-    const ans = document.getElementById('dictation-answer');
-    ans.style.display = ans.style.display === 'none' ? 'block' : 'none';
-  }}
 </script>
 
 </body>
@@ -400,7 +461,7 @@ with open('public/index.html', 'w', encoding='utf-8') as f:
 
 email_body = f"""本日のシャドーイング教材が更新されました！
 
-段階的シャドーイング機能（重要文抽出・スラッシュ表示・1文分割再生・0.6倍〜1.5倍速対応）を搭載した専用Webページが開きます。
+リンキング特化型ディクテーション（3問）や段階的シャドーイング機能を搭載した専用Webページが開きます。
 
 👉 今日の学習ページを開く:
 {page_url}
