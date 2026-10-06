@@ -75,7 +75,6 @@ pitch_script = (
     else 'Failed to generate pitch script.'
 )
 
-# key_sentences の安全な取得（文字列・リスト両対応）
 raw_key = data.get('key_sentences', '')
 if isinstance(raw_key, list):
   key_sentences = ' '.join(raw_key).strip()
@@ -101,7 +100,6 @@ japanese_translation = (
 )
 quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
 
-# 文単位での分割
 sentence_list = [
     s.strip()
     for s in re.split(r'(?<=[.!?])\s+', pitch_script)
@@ -153,7 +151,7 @@ with open('public/audio.mp3', 'wb') as outfile:
   with open(audio_path, 'rb') as infile:
     outfile.write(infile.read())
 
-# 5. HTML作成
+# 5. HTML作成（ご要望通りのカード順序へ並び替え）
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
 sentences_json_str = json.dumps(sentence_list, ensure_ascii=False)
 
@@ -222,6 +220,7 @@ html_content = f"""<!DOCTYPE html>
   <span class="date-badge">📅 {date_str}</span>
 </div>
 
+<!-- PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
     <div class="player-title">PLAYER</div>
@@ -237,27 +236,38 @@ html_content = f"""<!DOCTYPE html>
   <audio id="audio-player" controls src="{audio_filename}?v={timestamp}" autoplay></audio>
 </div>
 
-<div class="key-card">
-  <h3>🎯 STEP 1: 今日の重点ターゲット（Key Sentence）</h3>
-  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">{html.escape(key_sentences)}</p>
+<!-- 1. PLAYER直下：Pitch Script (全文原稿) -->
+<div class="card">
+  <h2>📖 Pitch Script (全文原稿)</h2>
+  <div class="script-text">{html.escape(pitch_script)}</div>
 </div>
 
+<!-- 2. スラッシュ＆リズム表示 -->
 <div class="card">
-  <h2>📖 STEP 2: スラッシュ＆リズム表示テキスト</h2>
+  <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
   <div class="slash-text">{slash_script}</div>
 </div>
 
+<!-- 3. シャドーイング練習用の重点ターゲット（Key Sentence） -->
+<div class="key-card">
+  <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
+  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">{html.escape(key_sentences)}</p>
+</div>
+
+<!-- 4. 1文ずつ分割再生でシャドーイング -->
 <div class="card">
-  <h2>🗣️ STEP 3: 1文ずつ分割再生でシャドーイング</h2>
+  <h2>🗣️ 1文ずつ分割再生でシャドーイング</h2>
   <div id="sentence-container"></div>
 </div>
 
+<!-- 5. Comprehension Check (4択クイズ) -->
 <div class="card">
   <h2>📝 Comprehension Check (3 Questions)</h2>
   <div id="quiz-container"></div>
 </div>
 
+<!-- 6. Dictation Exercise (Option) -->
 <details>
   <summary>✍️ Dictation Exercise (Option)</summary>
   <div class="details-content">
@@ -268,13 +278,9 @@ html_content = f"""<!DOCTYPE html>
   </div>
 </details>
 
+<!-- 7. 全文テキスト＆注釈・解説 -->
 <div class="card">
-  <h2>Pitch Script (全文原稿)</h2>
-  <div class="script-text">{html.escape(pitch_script)}</div>
-</div>
-
-<div class="card">
-  <h2>全文テキスト＆注釈・解説</h2>
+  <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">{html.escape(generated_text)}</div>
 </div>
 
