@@ -48,7 +48,7 @@ selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
 # 3. プロンプト定義と生成
-prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、および内容理解確認クイズをJSON形式で作成してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。\n7. スラッシュリーディング・強音表示テキスト: 意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n\nJSONキー: pitch_script (文字列), key_sentences (文字列), slash_script (文字列), vocabulary (文字列), japanese_translation (文字列), quiz (question, options, answer, explanation を持つ配列)"
+prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、および内容理解確認クイズをJSON形式で作成してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n\nJSONキー: pitch_script (文字列), key_sentences (スラッシュと<b>タグ付き文字列), slash_script (スラッシュと<b>タグ付き文字列), vocabulary (文字列), japanese_translation (文字列), quiz (question, options, answer, explanation を持つ配列)"
 
 response = client.chat.completions.create(
     model='gpt-4o',
@@ -99,6 +99,9 @@ japanese_translation = (
     else 'No translation generated.'
 )
 quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
+
+# 音声読み上げ用にHTMLタグを除去したプレーンテキスト版の Key Sentence を用意
+clean_key_sentences = re.sub(r'<[^>]+>', '', key_sentences).replace('/', '')
 
 sentence_list = [
     s.strip()
@@ -151,7 +154,7 @@ with open('public/audio.mp3', 'wb') as outfile:
   with open(audio_path, 'rb') as infile:
     outfile.write(infile.read())
 
-# 5. HTML作成（ご要望通りのカード順序へ並び替え）
+# 5. HTML作成
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
 sentences_json_str = json.dumps(sentence_list, ensure_ascii=False)
 
@@ -183,7 +186,11 @@ html_content = f"""<!DOCTYPE html>
   h2 {{ color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }}
   
   .key-card {{ background: #fff3cd; border-left: 6px solid #ffc107; padding: 16px; border-radius: 8px; margin-bottom: 20px; }}
-  .key-card h3 {{ margin: 0 0 8px 0; color: #856404; font-size: 1.1em; }}
+  .key-card h3 {{ margin: 0 0 10px 0; color: #856404; font-size: 1.1em; }}
+  .key-sentence-box {{ display: flex; align-items: flex-start; gap: 12px; }}
+  .key-text-content {{ font-size: 1.1em; line-height: 1.8; color: #212529; font-weight: bold; }}
+  .key-text-content b {{ color: #0d6efd; font-weight: 700; }}
+  
   .slash-text {{ font-size: 1.15em; line-height: 2.0; color: #212529; background: #fdfbf7; padding: 16px; border-radius: 8px; border: 1px dashed #d3d3d3; }}
   .slash-text b {{ color: #0d6efd; font-weight: 700; }}
   
@@ -236,7 +243,7 @@ html_content = f"""<!DOCTYPE html>
   <audio id="audio-player" controls src="{audio_filename}?v={timestamp}" autoplay></audio>
 </div>
 
-<!-- 1. PLAYER直下：Pitch Script (全文原稿) -->
+<!-- 1. Pitch Script (全文原稿) -->
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
   <div class="script-text">{html.escape(pitch_script)}</div>
@@ -249,25 +256,31 @@ html_content = f"""<!DOCTYPE html>
   <div class="slash-text">{slash_script}</div>
 </div>
 
-<!-- 3. シャドーイング練習用の重点ターゲット（Key Sentence） -->
+<!-- 3. 今日の重点シャドーイング練習センテンス（スラッシュ＆青太字表示・再生ボタン付き） -->
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
-  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">{html.escape(key_sentences)}</p>
+  <div class="key-sentence-box">
+    <button class="play-sentence-btn" onclick="playText(`{html.escape(clean_key_sentences)}`)">▶ 再生</button>
+    <div class="key-text-content">{key_sentences}</div>
+  </div>
 </div>
 
-<!-- 4. 1文ずつ分割再生でシャドーイング -->
-<div class="card">
-  <h2>🗣️ 1文ずつ分割再生でシャドーイング</h2>
-  <div id="sentence-container"></div>
-</div>
-
-<!-- 5. Comprehension Check (4択クイズ) -->
+<!-- 4. Comprehension Check (3 Questions) -->
 <div class="card">
   <h2>📝 Comprehension Check (3 Questions)</h2>
   <div id="quiz-container"></div>
 </div>
 
-<!-- 6. Dictation Exercise (Option) -->
+<!-- 5. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
+<details>
+  <summary>🗣️ Sentence-by-Sentence Shadowing (Option)</summary>
+  <div class="details-content">
+    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">1文ずつじっくり聞いてシャドーイングの練習をしたい時にご活用ください。</p>
+    <div id="sentence-container" style="margin-top: 10px;"></div>
+  </div>
+</details>
+
+<!-- 6. Dictation Exercise (Option / 折りたたみ) -->
 <details>
   <summary>✍️ Dictation Exercise (Option)</summary>
   <div class="details-content">
@@ -295,6 +308,14 @@ html_content = f"""<!DOCTYPE html>
     btn.classList.add('active');
   }}
 
+  function playText(text) {{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = currentSpeed;
+    window.speechSynthesis.speak(utter);
+  }}
+
   const sentenceList = {sentences_json_str};
   const sentenceContainer = document.getElementById('sentence-container');
 
@@ -306,13 +327,7 @@ html_content = f"""<!DOCTYPE html>
       const btn = document.createElement('button');
       btn.className = 'play-sentence-btn';
       btn.innerHTML = '▶ 再生';
-      btn.onclick = () => {{
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(st);
-        utter.lang = 'en-US';
-        utter.rate = currentSpeed;
-        window.speechSynthesis.speak(utter);
-      }};
+      btn.onclick = () => playText(st);
 
       const textSpan = document.createElement('span');
       textSpan.style.fontSize = '1em';
