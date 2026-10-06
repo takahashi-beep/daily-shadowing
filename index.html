@@ -26,7 +26,11 @@
   h2 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }
   
   .key-card { background: #fff3cd; border-left: 6px solid #ffc107; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-  .key-card h3 { margin: 0 0 8px 0; color: #856404; font-size: 1.1em; }
+  .key-card h3 { margin: 0 0 10px 0; color: #856404; font-size: 1.1em; }
+  .key-sentence-box { display: flex; align-items: flex-start; gap: 12px; }
+  .key-text-content { font-size: 1.1em; line-height: 1.8; color: #212529; font-weight: bold; }
+  .key-text-content b { color: #0d6efd; font-weight: 700; }
+  
   .slash-text { font-size: 1.15em; line-height: 2.0; color: #212529; background: #fdfbf7; padding: 16px; border-radius: 8px; border: 1px dashed #d3d3d3; }
   .slash-text b { color: #0d6efd; font-weight: 700; }
   
@@ -76,48 +80,69 @@
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791272167" autoplay></audio>
+  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791272534" autoplay></audio>
 </div>
 
-<!-- 1. PLAYER直下：Pitch Script (全文原稿) -->
+<!-- 1. Pitch Script (全文原稿) -->
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
-  <div class="script-text">Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.</div>
+  <div class="script-text">Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.</div>
 </div>
 
 <!-- 2. スラッシュ＆リズム表示 -->
 <div class="card">
   <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
-  <div class="slash-text">Good day, <b>investors</b>. / We are <b>TechNova</b>, / a <b>startup</b> revolutionizing / agricultural <b>technology</b>. / Our mission is to / address the <b>inefficiency</b> in crop yield / through AI-driven solutions. / Our business model is / a <b>subscription-based</b> service offering / real-time data / and customized advice to farmers. / The global market for / agricultural technology is projected to / reach $17 billion by 2025, / with Asia-Pacific as the fastest-growing region. / We have a strong foothold in the Philippines, / where we've partnered with over 300 farms, / showing a 20% increase in productivity. / Our technological <b>infrastructure</b> / creates a significant entry barrier for competitors. / We are seeking a $2 million <b>investment</b> / to scale our <b>operations</b>, / enhance our AI capabilities, / and expand into Southeast Asia. / Thank you for considering <b>TechNova</b>, / where technology meets agriculture / for a <b>sustainable</b> future.</div>
+  <div class="slash-text">Good day, / investors. / We are TechClean, / a Filipino startup / dedicated to 
+<b>revolutionizing</b> / waste management. / Our <b>solution</b> / <b>addresses</b> / the <b>mounting</b> 
+<b>challenge</b> / of e-waste, / which <b>grows</b> / by 3% / annually. / Through / our proprietary /
+AI-driven / technology, / we <b>efficiently</b> <b>separate</b> / and recycle / electronic waste, / 
+<b>extracting</b> / valuable metals / like gold / and palladium. / Our business model / is 
+based on / subscription services / with municipalities / and industries, / generating 
+consistent revenue. / The global e-waste market / is projected / to reach $74 billion / by 2027, /
+providing us / with <b>immense</b> growth potential. / Our <b>competitive</b> advantage / lies in / our
+advanced tech / and strategic partnerships, / which create / significant entry barriers / for 
+competitors. / Having secured / $500,000 / in revenue / last year, / we seek / an additional / 
+$2 million / to scale operations / and expand / internationally. / Join us / in making / the world /
+cleaner and greener.</div>
 </div>
 
-<!-- 3. シャドーイング練習用の重点ターゲット（Key Sentence） -->
+<!-- 3. 今日の重点シャドーイング練習センテンス（スラッシュ＆青太字表示・再生ボタン付き） -->
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
-  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">Our mission is to address the inefficiency in crop yield through AI-driven solutions. We are seeking a $2 million investment to scale our operations.</p>
+  <div class="key-sentence-box">
+    <button class="play-sentence-btn" onclick="playText(`Our solution  addresses  the mounting challenge  of e-waste,  which grows  by 3%  
+annually.  Through  our proprietary  AI-driven  technology,  we efficiently separate  
+and recycle  electronic waste,  extracting  valuable metals  like gold  and palladium.`)">▶ 再生</button>
+    <div class="key-text-content">Our <b>solution</b> / <b>addresses</b> / the <b>mounting</b> <b>challenge</b> / of e-waste, / which <b>grows</b> / by 3% / 
+annually. / Through / our proprietary / AI-driven / technology, / we <b>efficiently</b> <b>separate</b> / 
+and recycle / electronic waste, / <b>extracting</b> / valuable metals / like gold / and palladium.</div>
+  </div>
 </div>
 
-<!-- 4. 1文ずつ分割再生でシャドーイング -->
-<div class="card">
-  <h2>🗣️ 1文ずつ分割再生でシャドーイング</h2>
-  <div id="sentence-container"></div>
-</div>
-
-<!-- 5. Comprehension Check (4択クイズ) -->
+<!-- 4. Comprehension Check (3 Questions) -->
 <div class="card">
   <h2>📝 Comprehension Check (3 Questions)</h2>
   <div id="quiz-container"></div>
 </div>
 
-<!-- 6. Dictation Exercise (Option) -->
+<!-- 5. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
+<details>
+  <summary>🗣️ Sentence-by-Sentence Shadowing (Option)</summary>
+  <div class="details-content">
+    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">1文ずつじっくり聞いてシャドーイングの練習をしたい時にご活用ください。</p>
+    <div id="sentence-container" style="margin-top: 10px;"></div>
+  </div>
+</details>
+
+<!-- 6. Dictation Exercise (Option / 折りたたみ) -->
 <details>
   <summary>✍️ Dictation Exercise (Option)</summary>
   <div class="details-content">
     <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音声を聞きながら、聞き取れた英文を入力してみましょう。完了したら「答え合わせ」ボタンを押して原稿と比較できます。</p>
     <textarea id="dictation-input" placeholder="Type what you hear..."></textarea>
     <button onclick="toggleAnswer()" style="margin-top: 10px; background: #0d6efd; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">答え合わせ（原稿を表示）</button>
-    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.</div>
+    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.</div>
   </div>
 </details>
 
@@ -128,13 +153,13 @@
 フィリピン
 
 【Pitch Script】
-Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.
+Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.
 
 【Vocabulary &amp; Key Phrases】
 No vocabulary generated.
 
 【日本語訳】
-こんにちは、投資家の皆様。私たちはTechNovaという、農業技術を革新するスタートアップです。私たちの使命は、AI駆動のソリューションを通じて作物収量の非効率性に取り組むことです。私たちのビジネスモデルは、実時データとカスタマイズされた農業アドバイスを提供するサブスクリプションベースのサービスです。農業技術の世界市場は2025年までに170億ドルに達する見込みで、アジア太平洋が最も急成長する地域です。フィリピンに強い地盤を持ち、300以上の農場と提携し、生産性が20%向上しています。私たちの技術インフラは、競争相手にとって大きな参入障壁を作ります。私たちは200万ドルの投資を求めており、事業拡大、AI能力の向上、東南アジアへの展開を目指しています。農業と技術が出会う場所、TechNovaをどうぞよろしくお願いします。
+おはようございます、投資家の皆様。私たちはTechCleanです。フィリピンを拠点とするスタートアップで、廃棄物管理に革命をもたらします。我々のソリューションは年3%のペースで増えている電子廃棄物の課題に対応します。当社の独自AI技術を通じて、電子廃棄物を効率的に分離・リサイクルし、金やパラジウムのような貴重な金属を抽出します。ビジネスモデルは市区町村や産業向けのサブスクリプションサービスで、安定した収益を生み出しています。世界の電子廃棄物市場は2027年までに740億ドルに達すると予測されており、当社には大きな成長の可能性があります。当社の競争優位は、先進的な技術と戦略的パートナーシップにあり、競争相手への参入障壁を形成しています。昨年は50万ドルの収益を確保し、さらに200万ドルの資金を求めて、事業を拡大し国際展開を図っています。世界をよりクリーンでグリーンにするために、ぜひご参加ください。
 </div>
 </div>
 
@@ -149,7 +174,15 @@ No vocabulary generated.
     btn.classList.add('active');
   }
 
-  const sentenceList = ["Good day, investors.", "We are TechNova, a startup revolutionizing agricultural technology.", "Our mission is to address the inefficiency in crop yield through AI-driven solutions.", "Our business model is a subscription-based service offering real-time data and customized advice to farmers.", "The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region.", "We have a strong foothold in the Philippines, where we've partnered with over 300 farms, showing a 20% increase in productivity.", "Our technological infrastructure creates a significant entry barrier for competitors.", "We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia.", "Thank you for considering TechNova, where technology meets agriculture for a sustainable future."];
+  function playText(text) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = currentSpeed;
+    window.speechSynthesis.speak(utter);
+  }
+
+  const sentenceList = ["Good day, investors.", "We are TechClean, a Filipino startup dedicated to revolutionizing waste management.", "Our solution addresses the mounting challenge of e-waste, which grows by 3% annually.", "Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium.", "Our business model is based on subscription services with municipalities and industries, generating consistent revenue.", "The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential.", "Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors.", "Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally.", "Join us in making the world cleaner and greener."];
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceList && sentenceList.length > 0) {
@@ -160,13 +193,7 @@ No vocabulary generated.
       const btn = document.createElement('button');
       btn.className = 'play-sentence-btn';
       btn.innerHTML = '▶ 再生';
-      btn.onclick = () => {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(st);
-        utter.lang = 'en-US';
-        utter.rate = currentSpeed;
-        window.speechSynthesis.speak(utter);
-      };
+      btn.onclick = () => playText(st);
 
       const textSpan = document.createElement('span');
       textSpan.style.fontSize = '1em';
@@ -178,7 +205,7 @@ No vocabulary generated.
     });
   }
 
-  const quizData = [{"question": "What is the primary issue TechNova aims to address?", "options": ["A) High farming costs", "B) Crop yield inefficiency", "C) Lack of skilled farmers", "D) Poor soil quality"], "answer": "B", "explanation": "TechNova's mission is to tackle crop yield inefficiency using AI-driven solutions."}, {"question": "How much investment is TechNova seeking?", "options": ["A) $500,000", "B) $1 million", "C) $2 million", "D) $5 million"], "answer": "C", "explanation": "TechNova is seeking a $2 million investment for scaling operations and enhancing AI capabilities."}, {"question": "In which region has TechNova established a significant presence?", "options": ["A) Europe", "B) North America", "C) Africa", "D) Philippines"], "answer": "D", "explanation": "TechNova has a strong foothold in the Philippines, partnering with over 300 farms."}];
+  const quizData = [{"question": "What problem does TechClean's solution address?", "options": ["A. Water pollution", "B. Air pollution", "C. E-waste management", "D. Noise pollution"], "answer": "C", "explanation": "TechClean addresses the challenge of e-waste management."}, {"question": "What is TechClean's business model based on?", "options": ["A. One-time purchase", "B. Subscription services", "C. Advertising revenue", "D. Licensing fees"], "answer": "B", "explanation": "TechClean's business model is based on subscription services with municipalities and industries."}, {"question": "What is TechClean's competitive advantage?", "options": ["A. Low costs", "B. High product variety", "C. Advanced technology and partnerships", "D. Extensive marketing"], "answer": "C", "explanation": "TechClean's competitive advantage lies in its advanced tech and strategic partnerships."}];
   const quizContainer = document.getElementById('quiz-container');
 
   if (quizData && quizData.length > 0) {
