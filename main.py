@@ -66,33 +66,32 @@ prompt = f"""
    - ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。
    - 各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。
 
-### 出力フォーマット（JSON形式で出力してください）：
+### 出力フォーマット（JSON形式）：
 ```json
 {{
-  "country": "{selected_country}",
-  "pitch_script": "ここに150〜180語の英語本文",
-  "key_sentences": "ここに抽出した最重要の1〜2文",
-  "slash_script": "<b>Good day</b>, / esteemed <b>investors</b>. / We are <b>Technovate</b>... のようにスラッシュと<b>タグで装飾した本文",
-  "vocabulary": "【Vocabulary & Key Phrases】\\n1. [単語] (発音記号) : 日本語訳\\n   - 解説: ...",
-  "japanese_translation": "ここに本文の自然な日本語訳",
+  "pitch_script": "150-180 words pitch script in English",
+  "key_sentences": "Most important 1-2 sentences for shadowing practice",
+  "slash_script": "<b>Good day</b>, / esteemed <b>investors</b>. / ...",
+  "vocabulary": "1. Word (pronunciation): Meaning\\n   - Note: Explanation",
+  "japanese_translation": "Japanese translation of the pitch",
   "quiz": [
     {{
-      "question": "1. What is the main problem the startup aims to solve?",
-      "options": ["A) Option A", "B) Option B", "C) Option C", "D) Option D"],
+      "question": "1. What is the main problem...?",
+      "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
       "answer": "A",
-      "explanation": "日本語の解説..."
+      "explanation": "日本語解説"
     }},
     {{
       "question": "2. ...",
       "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
       "answer": "B",
-      "explanation": "日本語の解説..."
+      "explanation": "日本語解説"
     }},
     {{
       "question": "3. ...",
       "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
       "answer": "C",
-      "explanation": "日本語の解説..."
+      "explanation": "日本語解説"
     }}
   ]
 }}
