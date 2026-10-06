@@ -308,29 +308,33 @@ html_content = f"""<!DOCTYPE html>
     btn.classList.add('active');
   }}
 
-  // 英語音声指定を強化した再生関数
+  // 確実に英語ネイティブの声を選択する厳格な再生関数
   function playText(text) {{
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
     utter.rate = currentSpeed;
     
-    // 利用可能な声のリストから英語(en-US/en-GB)の音声を検索してセット
     const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) {{
-      utter.voice = enVoice;
+    // 言語がenで始まるボイスの中で、最も品質の高い米国/英国英語ボイスを検索
+    let selectedVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en_US');
+    if (!selectedVoice) {{
+      selectedVoice = voices.find(v => v.lang.startsWith('en'));
+    }}
+    
+    if (selectedVoice) {{
+      utter.voice = selectedVoice;
     }}
     
     window.speechSynthesis.speak(utter);
   }}
 
-  // ブラウザの音声エンジン読み込み完了イベント
-  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {{
-    speechSynthesis.onvoiceschanged = () => {{
-      window.speechSynthesis.getVoices();
-    }};
-  }}
+  // ページの読み込み直後に音声エンジンを初期化させる
+  window.addEventListener('DOMContentLoaded', () => {{
+    if (typeof speechSynthesis !== 'undefined') {{
+      speechSynthesis.getVoices();
+    }}
+  }});
 
   const linkingData = {linking_json_str};
   const linkingContainer = document.getElementById('linking-container');
@@ -340,7 +344,6 @@ html_content = f"""<!DOCTYPE html>
       const div = document.createElement('div');
       div.className = 'linking-item';
 
-      // 穴埋め前の元の文章を作成して高品質に再生
       const fullSentence = item.sentence_with_blank.replace('[ _____ ]', item.answer);
 
       const playBtn = document.createElement('button');
