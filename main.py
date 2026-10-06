@@ -47,8 +47,8 @@ ACCENTS = {
 selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
-# 3. プロンプト定義と生成（リンキング穴埋めディクテーションを追加）
-prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、およびリンキング特化型ディクテーション問題を作成し、JSON形式で出力してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n9. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（穴埋め部分は [ _____ ] と表記）、正解フレーズ、カタカナ発音イメージヒント、日本語の発音変化解説を含めること。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (配列: question, options, answer, explanation), linking_dictation (配列: sentence_with_blank, answer, target_text, hint, explanation)"
+# 3. プロンプト定義と生成
+prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、および内容理解確認用のリンキング穴埋めディクテーション問題を作成し、JSON形式で出力してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n9. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（穴埋め部分は [ _____ ] と表記）、正解フレーズ、カタカナ発音イメージヒント、日本語の発音変化解説を含めること。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (配列: question, options, answer, explanation), linking_dictation (配列: sentence_with_blank, answer, target_text, hint, explanation)"
 
 response = client.chat.completions.create(
     model='gpt-4o',
@@ -215,7 +215,6 @@ html_content = f"""<!DOCTYPE html>
   .quiz-opt.incorrect {{ background: #f8d7da; border-color: #842029; color: #842029; }}
   .quiz-exp {{ margin-top: 8px; padding: 10px; background: #e2e3e5; border-radius: 6px; font-size: 0.9em; display: none; }}
 
-  /* リンキングディクテーション用スタイル */
   .linking-item {{ background: #f8f9fa; border: 1px solid #e9ecef; padding: 16px; border-radius: 8px; margin-bottom: 16px; }}
   .linking-q {{ font-size: 1.05em; margin-bottom: 8px; line-height: 1.6; }}
   .linking-input-group {{ display: flex; gap: 8px; margin: 10px 0; }}
@@ -238,7 +237,6 @@ html_content = f"""<!DOCTYPE html>
   <span class="date-badge">📅 {date_str}</span>
 </div>
 
-<!-- PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
     <div class="player-title">PLAYER</div>
@@ -254,20 +252,17 @@ html_content = f"""<!DOCTYPE html>
   <audio id="audio-player" controls src="{audio_filename}?v={timestamp}" autoplay></audio>
 </div>
 
-<!-- 1. Pitch Script (全文原稿) -->
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
   <div class="script-text">{html.escape(pitch_script)}</div>
 </div>
 
-<!-- 2. スラッシュ＆リズム表示 -->
 <div class="card">
   <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
   <div class="slash-text">{slash_script}</div>
 </div>
 
-<!-- 3. 今日の重点シャドーイング練習センテンス -->
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
@@ -276,13 +271,11 @@ html_content = f"""<!DOCTYPE html>
   </div>
 </div>
 
-<!-- 4. Comprehension Check (3 Questions) -->
 <div class="card">
   <h2>📝 Comprehension Check (3 Questions)</h2>
   <div id="quiz-container"></div>
 </div>
 
-<!-- 5. リンキング穴埋めディクテーション（スマホ対応・3問） -->
 <details open>
   <summary>✍️ Linking Dictation (3 Questions)</summary>
   <div class="details-content">
@@ -291,7 +284,6 @@ html_content = f"""<!DOCTYPE html>
   </div>
 </details>
 
-<!-- 6. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
 <details>
   <summary>🗣️ Sentence-by-Sentence Shadowing (Option)</summary>
   <div class="details-content">
@@ -300,7 +292,6 @@ html_content = f"""<!DOCTYPE html>
   </div>
 </details>
 
-<!-- 7. 全文テキスト＆注釈・解説 -->
 <div class="card">
   <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">{html.escape(generated_text)}</div>
@@ -317,15 +308,30 @@ html_content = f"""<!DOCTYPE html>
     btn.classList.add('active');
   }}
 
+  // 英語音声指定を強化した再生関数
   function playText(text) {{
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
     utter.rate = currentSpeed;
+    
+    // 利用可能な声のリストから英語(en-US/en-GB)の音声を検索してセット
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) {{
+      utter.voice = enVoice;
+    }}
+    
     window.speechSynthesis.speak(utter);
   }}
 
-  // リンキングディクテーションの動的生成
+  // ブラウザの音声エンジン読み込み完了イベント
+  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {{
+    speechSynthesis.onvoiceschanged = () => {{
+      window.speechSynthesis.getVoices();
+    }};
+  }}
+
   const linkingData = {linking_json_str};
   const linkingContainer = document.getElementById('linking-container');
 
@@ -334,10 +340,13 @@ html_content = f"""<!DOCTYPE html>
       const div = document.createElement('div');
       div.className = 'linking-item';
 
+      // 穴埋め前の元の文章を作成して高品質に再生
+      const fullSentence = item.sentence_with_blank.replace('[ _____ ]', item.answer);
+
       const playBtn = document.createElement('button');
       playBtn.className = 'play-sentence-btn';
       playBtn.innerHTML = '▶ 音声を聴く';
-      playBtn.onclick = () => playText(item.sentence_with_blank.replace('[ _____ ]', item.answer));
+      playBtn.onclick = () => playText(fullSentence);
 
       const qText = document.createElement('div');
       qText.className = 'linking-q';
