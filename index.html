@@ -59,10 +59,11 @@
 
 <div class="card">
   <h1>🎧 Daily Shadowing</h1>
-  <span class="tag">アクセント: 標準アメリカ ＆ インド</span>
+  <span class="tag">アクセント: 標準アメリカ ＆ フィリピン</span>
   <span class="date-badge">📅 2026-10-06</span>
 </div>
 
+<!-- PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
     <div class="player-title">PLAYER</div>
@@ -75,58 +76,65 @@
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791271550" autoplay></audio>
+  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791272167" autoplay></audio>
 </div>
 
-<div class="key-card">
-  <h3>🎯 STEP 1: 今日の重点ターゲット（Key Sentence）</h3>
-  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">Our business model is subscription-based, allowing customers to access the latest upgrades without major capital investment.</p>
-</div>
-
+<!-- 1. PLAYER直下：Pitch Script (全文原稿) -->
 <div class="card">
-  <h2>📖 STEP 2: スラッシュ＆リズム表示テキスト</h2>
+  <h2>📖 Pitch Script (全文原稿)</h2>
+  <div class="script-text">Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.</div>
+</div>
+
+<!-- 2. スラッシュ＆リズム表示 -->
+<div class="card">
+  <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
-  <div class="slash-text">Good morning, / esteemed <b>investors</b>. / I am / Arjun Patel, / the <b>founder</b> of / TechSolutions, / a <b>startup</b> aiming / to <b>revolutionize</b> the / clean energy <b>market</b>. / Our <b>mission</b> is / to tackle / the global <b>challenge</b> of / energy inefficiency / by providing / cutting-edge, / sustainable solutions. / We have <b>developed</b> / a <b>unique</b> solar panel / technology / that increases / energy <b>conversion</b> by / 20% through / optimized <b>materials</b>, / and this <b>addresses</b> / the $100 billion / market opportunity. / Our business <b>model</b> is / subscription-based, / allowing customers / to access / the latest <b>upgrades</b> / without major / capital investment. / With patents <b>pending</b>, / our technology / presents significant / entry <b>barriers</b> / for competitors. / To date, / we have partnered / with five major / energy companies, / generating $2 million / in revenue. / We seek / $5 million / in funding / to scale <b>production</b> / and expand / our team. / TechSolutions is / poised to lead / the energy <b>revolution</b>. / Thank you.</div>
+  <div class="slash-text">Good day, <b>investors</b>. / We are <b>TechNova</b>, / a <b>startup</b> revolutionizing / agricultural <b>technology</b>. / Our mission is to / address the <b>inefficiency</b> in crop yield / through AI-driven solutions. / Our business model is / a <b>subscription-based</b> service offering / real-time data / and customized advice to farmers. / The global market for / agricultural technology is projected to / reach $17 billion by 2025, / with Asia-Pacific as the fastest-growing region. / We have a strong foothold in the Philippines, / where we've partnered with over 300 farms, / showing a 20% increase in productivity. / Our technological <b>infrastructure</b> / creates a significant entry barrier for competitors. / We are seeking a $2 million <b>investment</b> / to scale our <b>operations</b>, / enhance our AI capabilities, / and expand into Southeast Asia. / Thank you for considering <b>TechNova</b>, / where technology meets agriculture / for a <b>sustainable</b> future.</div>
 </div>
 
+<!-- 3. シャドーイング練習用の重点ターゲット（Key Sentence） -->
+<div class="key-card">
+  <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
+  <p style="font-size: 1.1em; margin: 0; font-weight: bold; color: #333;">Our mission is to address the inefficiency in crop yield through AI-driven solutions. We are seeking a $2 million investment to scale our operations.</p>
+</div>
+
+<!-- 4. 1文ずつ分割再生でシャドーイング -->
 <div class="card">
-  <h2>🗣️ STEP 3: 1文ずつ分割再生でシャドーイング</h2>
+  <h2>🗣️ 1文ずつ分割再生でシャドーイング</h2>
   <div id="sentence-container"></div>
 </div>
 
+<!-- 5. Comprehension Check (4択クイズ) -->
 <div class="card">
   <h2>📝 Comprehension Check (3 Questions)</h2>
   <div id="quiz-container"></div>
 </div>
 
+<!-- 6. Dictation Exercise (Option) -->
 <details>
   <summary>✍️ Dictation Exercise (Option)</summary>
   <div class="details-content">
     <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音声を聞きながら、聞き取れた英文を入力してみましょう。完了したら「答え合わせ」ボタンを押して原稿と比較できます。</p>
     <textarea id="dictation-input" placeholder="Type what you hear..."></textarea>
     <button onclick="toggleAnswer()" style="margin-top: 10px; background: #0d6efd; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">答え合わせ（原稿を表示）</button>
-    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">Good morning, esteemed investors. I am Arjun Patel, the founder of TechSolutions, a startup aiming to revolutionize the clean energy market. Our mission is to tackle the global challenge of energy inefficiency by providing cutting-edge, sustainable solutions. We have developed a unique solar panel technology that increases energy conversion by 20% through optimized materials, and this addresses the $100 billion market opportunity. Our business model is subscription-based, allowing customers to access the latest upgrades without major capital investment. With patents pending, our technology presents significant entry barriers for competitors. To date, we have partnered with five major energy companies, generating $2 million in revenue. We seek $5 million in funding to scale production and expand our team. TechSolutions is poised to lead the energy revolution. Thank you.</div>
+    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.</div>
   </div>
 </details>
 
+<!-- 7. 全文テキスト＆注釈・解説 -->
 <div class="card">
-  <h2>Pitch Script (全文原稿)</h2>
-  <div class="script-text">Good morning, esteemed investors. I am Arjun Patel, the founder of TechSolutions, a startup aiming to revolutionize the clean energy market. Our mission is to tackle the global challenge of energy inefficiency by providing cutting-edge, sustainable solutions. We have developed a unique solar panel technology that increases energy conversion by 20% through optimized materials, and this addresses the $100 billion market opportunity. Our business model is subscription-based, allowing customers to access the latest upgrades without major capital investment. With patents pending, our technology presents significant entry barriers for competitors. To date, we have partnered with five major energy companies, generating $2 million in revenue. We seek $5 million in funding to scale production and expand our team. TechSolutions is poised to lead the energy revolution. Thank you.</div>
-</div>
-
-<div class="card">
-  <h2>全文テキスト＆注釈・解説</h2>
+  <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">【今日のアクセント指定】
-インド
+フィリピン
 
 【Pitch Script】
-Good morning, esteemed investors. I am Arjun Patel, the founder of TechSolutions, a startup aiming to revolutionize the clean energy market. Our mission is to tackle the global challenge of energy inefficiency by providing cutting-edge, sustainable solutions. We have developed a unique solar panel technology that increases energy conversion by 20% through optimized materials, and this addresses the $100 billion market opportunity. Our business model is subscription-based, allowing customers to access the latest upgrades without major capital investment. With patents pending, our technology presents significant entry barriers for competitors. To date, we have partnered with five major energy companies, generating $2 million in revenue. We seek $5 million in funding to scale production and expand our team. TechSolutions is poised to lead the energy revolution. Thank you.
+Good day, investors. We are TechNova, a startup revolutionizing agricultural technology. Our mission is to address the inefficiency in crop yield through AI-driven solutions. Our business model is a subscription-based service offering real-time data and customized advice to farmers. The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region. We have a strong foothold in the Philippines, where we&#x27;ve partnered with over 300 farms, showing a 20% increase in productivity. Our technological infrastructure creates a significant entry barrier for competitors. We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia. Thank you for considering TechNova, where technology meets agriculture for a sustainable future.
 
 【Vocabulary &amp; Key Phrases】
 No vocabulary generated.
 
 【日本語訳】
-おはようございます、尊敬する投資家の皆様。私はTechSolutionsの創業者、アルジュン・パテルです。私たちの使命は、最先端で持続可能なソリューションを提供し、エネルギーの非効率性という世界的な課題に取り組むことです。私たちは材料を最適化することで、エネルギー変換率を20%向上させる独自の太陽電池技術を開発しました。これにより、1000億ドル市場の機会に対応します。ビジネスモデルはサブスクリプションベースで、顧客は大規模な資本投資をせずに最新のアップグレードにアクセスできます。特許も申請中であり、競合他社に対する参入障壁が大きいです。これまでに5つの主要エネルギー企業と提携し、200万ドルの収益を上げております。生産拡大とチームの拡張のために500万ドルの資金を求めています。TechSolutionsはエネルギー革命の先駆者となるでしょう。ありがとうございました。
+こんにちは、投資家の皆様。私たちはTechNovaという、農業技術を革新するスタートアップです。私たちの使命は、AI駆動のソリューションを通じて作物収量の非効率性に取り組むことです。私たちのビジネスモデルは、実時データとカスタマイズされた農業アドバイスを提供するサブスクリプションベースのサービスです。農業技術の世界市場は2025年までに170億ドルに達する見込みで、アジア太平洋が最も急成長する地域です。フィリピンに強い地盤を持ち、300以上の農場と提携し、生産性が20%向上しています。私たちの技術インフラは、競争相手にとって大きな参入障壁を作ります。私たちは200万ドルの投資を求めており、事業拡大、AI能力の向上、東南アジアへの展開を目指しています。農業と技術が出会う場所、TechNovaをどうぞよろしくお願いします。
 </div>
 </div>
 
@@ -141,7 +149,7 @@ No vocabulary generated.
     btn.classList.add('active');
   }
 
-  const sentenceList = ["Good morning, esteemed investors.", "I am Arjun Patel, the founder of TechSolutions, a startup aiming to revolutionize the clean energy market.", "Our mission is to tackle the global challenge of energy inefficiency by providing cutting-edge, sustainable solutions.", "We have developed a unique solar panel technology that increases energy conversion by 20% through optimized materials, and this addresses the $100 billion market opportunity.", "Our business model is subscription-based, allowing customers to access the latest upgrades without major capital investment.", "With patents pending, our technology presents significant entry barriers for competitors.", "To date, we have partnered with five major energy companies, generating $2 million in revenue.", "We seek $5 million in funding to scale production and expand our team.", "TechSolutions is poised to lead the energy revolution.", "Thank you."];
+  const sentenceList = ["Good day, investors.", "We are TechNova, a startup revolutionizing agricultural technology.", "Our mission is to address the inefficiency in crop yield through AI-driven solutions.", "Our business model is a subscription-based service offering real-time data and customized advice to farmers.", "The global market for agricultural technology is projected to reach $17 billion by 2025, with Asia-Pacific as the fastest-growing region.", "We have a strong foothold in the Philippines, where we've partnered with over 300 farms, showing a 20% increase in productivity.", "Our technological infrastructure creates a significant entry barrier for competitors.", "We are seeking a $2 million investment to scale our operations, enhance our AI capabilities, and expand into Southeast Asia.", "Thank you for considering TechNova, where technology meets agriculture for a sustainable future."];
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceList && sentenceList.length > 0) {
@@ -170,7 +178,7 @@ No vocabulary generated.
     });
   }
 
-  const quizData = [{"question": "What does TechSolutions aim to improve with their technology?", "options": ["A. Market share", "B. Energy conversion", "C. Investment returns", "D. Management efficiency"], "answer": "B", "explanation": "TechSolutions has developed a solar panel technology that increases energy conversion by 20%."}, {"question": "What kind of business model does TechSolutions use?", "options": ["A. One-time purchase", "B. Commission-based", "C. Subscription-based", "D. Freemium"], "answer": "C", "explanation": "TechSolutions uses a subscription-based business model allowing customers periodic updates."}, {"question": "How much funding is TechSolutions seeking to expand?", "options": ["A. $2 million", "B. $5 million", "C. $10 million", "D. $100 million"], "answer": "B", "explanation": "TechSolutions is seeking $5 million in funding to scale production and expand their team."}];
+  const quizData = [{"question": "What is the primary issue TechNova aims to address?", "options": ["A) High farming costs", "B) Crop yield inefficiency", "C) Lack of skilled farmers", "D) Poor soil quality"], "answer": "B", "explanation": "TechNova's mission is to tackle crop yield inefficiency using AI-driven solutions."}, {"question": "How much investment is TechNova seeking?", "options": ["A) $500,000", "B) $1 million", "C) $2 million", "D) $5 million"], "answer": "C", "explanation": "TechNova is seeking a $2 million investment for scaling operations and enhancing AI capabilities."}, {"question": "In which region has TechNova established a significant presence?", "options": ["A) Europe", "B) North America", "C) Africa", "D) Philippines"], "answer": "D", "explanation": "TechNova has a strong foothold in the Philippines, partnering with over 300 farms."}];
   const quizContainer = document.getElementById('quiz-container');
 
   if (quizData && quizData.length > 0) {
