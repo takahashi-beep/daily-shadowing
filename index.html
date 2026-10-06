@@ -50,20 +50,26 @@
   .quiz-opt.incorrect { background: #f8d7da; border-color: #842029; color: #842029; }
   .quiz-exp { margin-top: 8px; padding: 10px; background: #e2e3e5; border-radius: 6px; font-size: 0.9em; display: none; }
 
+  /* リンキングディクテーション用スタイル */
+  .linking-item { background: #f8f9fa; border: 1px solid #e9ecef; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+  .linking-q { font-size: 1.05em; margin-bottom: 8px; line-height: 1.6; }
+  .linking-input-group { display: flex; gap: 8px; margin: 10px 0; }
+  .linking-input { flex: 1; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 1em; }
+  .linking-hint { font-size: 0.85em; color: #6c757d; margin-bottom: 6px; }
+
   details { background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
   summary { padding: 18px 24px; font-weight: bold; font-size: 1.1em; color: #1a237e; cursor: pointer; background: #fff; user-select: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "▼"; font-size: 0.8em; color: #6c757d; transition: transform 0.2s; }
   details[open] summary::after { transform: rotate(180deg); }
   .details-content { padding: 0 24px 24px 24px; border-top: 1px solid #f1f3f5; }
-  textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 1em; box-sizing: border-box; resize: vertical; margin-top: 10px; font-family: inherit; }
 </style>
 </head>
 <body>
 
 <div class="card">
   <h1>🎧 Daily Shadowing</h1>
-  <span class="tag">アクセント: 標準アメリカ ＆ フィリピン</span>
+  <span class="tag">アクセント: 標準アメリカ ＆ オーストラリア</span>
   <span class="date-badge">📅 2026-10-06</span>
 </div>
 
@@ -80,43 +86,28 @@
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791272534" autoplay></audio>
+  <audio id="audio-player" controls src="audio_2026-10-06.mp3?v=1791274283" autoplay></audio>
 </div>
 
 <!-- 1. Pitch Script (全文原稿) -->
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
-  <div class="script-text">Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.</div>
+  <div class="script-text">Ladies and gentlemen, today I present to you QuantumLeap, a groundbreaking startup that aims to revolutionize data security. With the increasing risk of cyber attacks, our company addresses the critical issue of data breaches by using quantum encryption technology. Our business model involves licensing our technology to major corporations seeking enhanced security measures. The global market for cybersecurity is projected to reach $345 billion by 2026, providing considerable growth potential. Our unique quantum algorithms create a significant barrier to entry for competitors. To date, we have secured partnerships with three industry leaders, validating our solution&#x27;s effectiveness. The requested investment of $2 million will be utilized to expand our R&amp;D team and accelerate our product&#x27;s development lifecycle. In summary, QuantumLeap is poised to redefine data security, offering unparalleled protection in a digital age where privacy is paramount.</div>
 </div>
 
 <!-- 2. スラッシュ＆リズム表示 -->
 <div class="card">
   <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
-  <div class="slash-text">Good day, / investors. / We are TechClean, / a Filipino startup / dedicated to 
-<b>revolutionizing</b> / waste management. / Our <b>solution</b> / <b>addresses</b> / the <b>mounting</b> 
-<b>challenge</b> / of e-waste, / which <b>grows</b> / by 3% / annually. / Through / our proprietary /
-AI-driven / technology, / we <b>efficiently</b> <b>separate</b> / and recycle / electronic waste, / 
-<b>extracting</b> / valuable metals / like gold / and palladium. / Our business model / is 
-based on / subscription services / with municipalities / and industries, / generating 
-consistent revenue. / The global e-waste market / is projected / to reach $74 billion / by 2027, /
-providing us / with <b>immense</b> growth potential. / Our <b>competitive</b> advantage / lies in / our
-advanced tech / and strategic partnerships, / which create / significant entry barriers / for 
-competitors. / Having secured / $500,000 / in revenue / last year, / we seek / an additional / 
-$2 million / to scale operations / and expand / internationally. / Join us / in making / the world /
-cleaner and greener.</div>
+  <div class="slash-text">Ladies and gentlemen, / today I present / to you QuantumLeap, / a <b>groundbreaking</b> startup / that aims to <b>revolutionize</b> data security. / With the <b>increasing</b> risk / of cyber attacks, / our company <b>addresses</b> the critical issue / of data breaches / by using <b>quantum</b> encryption technology. / Our <b>business</b> model involves <b>licensing</b> our technology / to <b>major</b> corporations / seeking <b>enhanced</b> security measures. / The <b>global</b> market / for <b>cybersecurity</b> is <b>projected</b> to <b>reach</b> $345 billion / by 2026, / providing <b>considerable</b> growth potential. / Our <b>unique</b> quantum algorithms / create a significant barrier to entry / for competitors. / To date, / we have <b>secured</b> partnerships / with three industry leaders, / validating our solution's <b>effectiveness</b>. / The <b>requested</b> investment of $2 million / will be utilized / to <b>expand</b> our R&D team / and <b>accelerate</b> our product's development lifecycle. / In <b>summary</b>, / QuantumLeap is <b>poised</b> to redefine data security, / offering <b>unparalleled</b> protection / in a digital age / where <b>privacy</b> is paramount.</div>
 </div>
 
-<!-- 3. 今日の重点シャドーイング練習センテンス（スラッシュ＆青太字表示・再生ボタン付き） -->
+<!-- 3. 今日の重点シャドーイング練習センテンス -->
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
-    <button class="play-sentence-btn" onclick="playText(`Our solution  addresses  the mounting challenge  of e-waste,  which grows  by 3%  
-annually.  Through  our proprietary  AI-driven  technology,  we efficiently separate  
-and recycle  electronic waste,  extracting  valuable metals  like gold  and palladium.`)">▶ 再生</button>
-    <div class="key-text-content">Our <b>solution</b> / <b>addresses</b> / the <b>mounting</b> <b>challenge</b> / of e-waste, / which <b>grows</b> / by 3% / 
-annually. / Through / our proprietary / AI-driven / technology, / we <b>efficiently</b> <b>separate</b> / 
-and recycle / electronic waste, / <b>extracting</b> / valuable metals / like gold / and palladium.</div>
+    <button class="play-sentence-btn" onclick="playText(`Our business model  involves licensing our technology  to major corporations  seeking enhanced security measures. The global market  for cybersecurity  is projected to reach $345 billion  by 2026.`)">▶ 再生</button>
+    <div class="key-text-content">Our <b>business</b> model / involves <b>licensing</b> our technology / to <b>major</b> corporations / seeking <b>enhanced</b> security measures. The <b>global</b> market / for <b>cybersecurity</b> / is projected to <b>reach</b> $345 billion / by 2026.</div>
   </div>
 </div>
 
@@ -126,7 +117,16 @@ and recycle / electronic waste, / <b>extracting</b> / valuable metals / like gol
   <div id="quiz-container"></div>
 </div>
 
-<!-- 5. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
+<!-- 5. リンキング穴埋めディクテーション（スマホ対応・3問） -->
+<details open>
+  <summary>✍️ Linking Dictation (3 Questions)</summary>
+  <div class="details-content">
+    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音がつながって聞こえるリンキング（連結・脱落）部分の穴埋め問題です。再生ボタンで音声を聞いて入力してみましょう。</p>
+    <div id="linking-container"></div>
+  </div>
+</details>
+
+<!-- 6. 1文ずつ分割再生でシャドーイング (Option / 折りたたみ) -->
 <details>
   <summary>🗣️ Sentence-by-Sentence Shadowing (Option)</summary>
   <div class="details-content">
@@ -135,31 +135,20 @@ and recycle / electronic waste, / <b>extracting</b> / valuable metals / like gol
   </div>
 </details>
 
-<!-- 6. Dictation Exercise (Option / 折りたたみ) -->
-<details>
-  <summary>✍️ Dictation Exercise (Option)</summary>
-  <div class="details-content">
-    <p style="font-size: 0.9em; color: #6c757d; margin-top: 14px;">音声を聞きながら、聞き取れた英文を入力してみましょう。完了したら「答え合わせ」ボタンを押して原稿と比較できます。</p>
-    <textarea id="dictation-input" placeholder="Type what you hear..."></textarea>
-    <button onclick="toggleAnswer()" style="margin-top: 10px; background: #0d6efd; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">答え合わせ（原稿を表示）</button>
-    <div id="dictation-answer" style="display: none; margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 6px; font-size: 1em; line-height: 1.6; white-space: pre-wrap;">Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.</div>
-  </div>
-</details>
-
 <!-- 7. 全文テキスト＆注釈・解説 -->
 <div class="card">
   <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">【今日のアクセント指定】
-フィリピン
+オーストラリア
 
 【Pitch Script】
-Good day, investors. We are TechClean, a Filipino startup dedicated to revolutionizing waste management. Our solution addresses the mounting challenge of e-waste, which grows by 3% annually. Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium. Our business model is based on subscription services with municipalities and industries, generating consistent revenue. The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential. Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors. Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally. Join us in making the world cleaner and greener.
+Ladies and gentlemen, today I present to you QuantumLeap, a groundbreaking startup that aims to revolutionize data security. With the increasing risk of cyber attacks, our company addresses the critical issue of data breaches by using quantum encryption technology. Our business model involves licensing our technology to major corporations seeking enhanced security measures. The global market for cybersecurity is projected to reach $345 billion by 2026, providing considerable growth potential. Our unique quantum algorithms create a significant barrier to entry for competitors. To date, we have secured partnerships with three industry leaders, validating our solution&#x27;s effectiveness. The requested investment of $2 million will be utilized to expand our R&amp;D team and accelerate our product&#x27;s development lifecycle. In summary, QuantumLeap is poised to redefine data security, offering unparalleled protection in a digital age where privacy is paramount.
 
 【Vocabulary &amp; Key Phrases】
 No vocabulary generated.
 
 【日本語訳】
-おはようございます、投資家の皆様。私たちはTechCleanです。フィリピンを拠点とするスタートアップで、廃棄物管理に革命をもたらします。我々のソリューションは年3%のペースで増えている電子廃棄物の課題に対応します。当社の独自AI技術を通じて、電子廃棄物を効率的に分離・リサイクルし、金やパラジウムのような貴重な金属を抽出します。ビジネスモデルは市区町村や産業向けのサブスクリプションサービスで、安定した収益を生み出しています。世界の電子廃棄物市場は2027年までに740億ドルに達すると予測されており、当社には大きな成長の可能性があります。当社の競争優位は、先進的な技術と戦略的パートナーシップにあり、競争相手への参入障壁を形成しています。昨年は50万ドルの収益を確保し、さらに200万ドルの資金を求めて、事業を拡大し国際展開を図っています。世界をよりクリーンでグリーンにするために、ぜひご参加ください。
+No translation generated.
 </div>
 </div>
 
@@ -182,7 +171,64 @@ No vocabulary generated.
     window.speechSynthesis.speak(utter);
   }
 
-  const sentenceList = ["Good day, investors.", "We are TechClean, a Filipino startup dedicated to revolutionizing waste management.", "Our solution addresses the mounting challenge of e-waste, which grows by 3% annually.", "Through our proprietary AI-driven technology, we efficiently separate and recycle electronic waste, extracting valuable metals like gold and palladium.", "Our business model is based on subscription services with municipalities and industries, generating consistent revenue.", "The global e-waste market is projected to reach $74 billion by 2027, providing us with immense growth potential.", "Our competitive advantage lies in our advanced tech and strategic partnerships, which create significant entry barriers for competitors.", "Having secured $500,000 in revenue last year, we seek an additional $2 million to scale operations and expand internationally.", "Join us in making the world cleaner and greener."];
+  // リンキングディクテーションの動的生成
+  const linkingData = [{"sentence_with_blank": "The requested investment [ _____ ] will be utilized to expand our R&D team.", "answer": "of $2 million", "target_text": "əv tuː ˈmɪljən", "hint": "オブ テュー ミリョン", "explanation": "「of」が母音の前で弱化し、「$2 million」と音が連結する。"}, {"sentence_with_blank": "Our company addresses the critical issue [ _____ ] data breaches.", "answer": "of data", "target_text": "əv ˈdeɪtə", "hint": "オブ デイタ", "explanation": "「of」が後の単語と音が連結し、「data」と響き合う。"}, {"sentence_with_blank": "QuantumLeap is poised to redefine data security, offering unparalleled protection [ _____ ] a digital age.", "answer": "in a", "target_text": "ɪn ə", "hint": "イン ア", "explanation": "「in」が「a」と連結し、より一体化した発音になる。"}];
+  const linkingContainer = document.getElementById('linking-container');
+
+  if (linkingData && linkingData.length > 0) {
+    linkingData.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = 'linking-item';
+
+      const playBtn = document.createElement('button');
+      playBtn.className = 'play-sentence-btn';
+      playBtn.innerHTML = '▶ 音声を聴く';
+      playBtn.onclick = () => playText(item.sentence_with_blank.replace('[ _____ ]', item.answer));
+
+      const qText = document.createElement('div');
+      qText.className = 'linking-q';
+      qText.style.marginTop = '8px';
+      qText.innerHTML = '<strong>Q' + (idx+1) + ':</strong> ' + item.sentence_with_blank;
+
+      const hintText = document.createElement('div');
+      hintText.className = 'linking-hint';
+      hintText.textContent = '💡 ヒント (聞こえ方のイメージ): ' + (item.hint || '音声を聞いて穴埋めしてください');
+
+      const inputGroup = document.createElement('div');
+      inputGroup.className = 'linking-input-group';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'linking-input';
+      input.placeholder = 'Type the missing words...';
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'play-sentence-btn';
+      checkBtn.style.background = '#0d6efd';
+      checkBtn.textContent = '答え合わせ';
+
+      const expDiv = document.createElement('div');
+      expDiv.className = 'quiz-exp';
+      expDiv.innerHTML = '<strong>正解:</strong> <span style="color:#0d6efd; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+
+      checkBtn.onclick = () => {
+        expDiv.style.display = 'block';
+      };
+
+      inputGroup.appendChild(input);
+      inputGroup.appendChild(checkBtn);
+
+      div.appendChild(playBtn);
+      div.appendChild(qText);
+      div.appendChild(hintText);
+      div.appendChild(inputGroup);
+      div.appendChild(expDiv);
+
+      linkingContainer.appendChild(div);
+    });
+  }
+
+  const sentenceList = ["Ladies and gentlemen, today I present to you QuantumLeap, a groundbreaking startup that aims to revolutionize data security.", "With the increasing risk of cyber attacks, our company addresses the critical issue of data breaches by using quantum encryption technology.", "Our business model involves licensing our technology to major corporations seeking enhanced security measures.", "The global market for cybersecurity is projected to reach $345 billion by 2026, providing considerable growth potential.", "Our unique quantum algorithms create a significant barrier to entry for competitors.", "To date, we have secured partnerships with three industry leaders, validating our solution's effectiveness.", "The requested investment of $2 million will be utilized to expand our R&D team and accelerate our product's development lifecycle.", "In summary, QuantumLeap is poised to redefine data security, offering unparalleled protection in a digital age where privacy is paramount."];
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceList && sentenceList.length > 0) {
@@ -205,7 +251,7 @@ No vocabulary generated.
     });
   }
 
-  const quizData = [{"question": "What problem does TechClean's solution address?", "options": ["A. Water pollution", "B. Air pollution", "C. E-waste management", "D. Noise pollution"], "answer": "C", "explanation": "TechClean addresses the challenge of e-waste management."}, {"question": "What is TechClean's business model based on?", "options": ["A. One-time purchase", "B. Subscription services", "C. Advertising revenue", "D. Licensing fees"], "answer": "B", "explanation": "TechClean's business model is based on subscription services with municipalities and industries."}, {"question": "What is TechClean's competitive advantage?", "options": ["A. Low costs", "B. High product variety", "C. Advanced technology and partnerships", "D. Extensive marketing"], "answer": "C", "explanation": "TechClean's competitive advantage lies in its advanced tech and strategic partnerships."}];
+  const quizData = [{"question": "What is the primary issue QuantumLeap addresses?", "options": ["A) Data breaches", "B) Market expansion", "C) Employee growth", "D) Software licensing"], "answer": "A", "explanation": "データ漏洩の問題を量子暗号技術で解決しようとしている。"}, {"question": "By what year is the global cybersecurity market expected to reach $345 billion?", "options": ["A) 2023", "B) 2024", "C) 2025", "D) 2026"], "answer": "D", "explanation": "2026年までにサイバーセキュリティ市場は3450億ドルに達すると予想されている。"}, {"question": "How does QuantumLeap plan to use the requested $2 million investment?", "options": ["A) Marketing", "B) R&D expansion", "C) Patent acquisition", "D) Office relocation"], "answer": "B", "explanation": "受け取る投資を研究開発チームの拡大に用いる予定である。"}];
   const quizContainer = document.getElementById('quiz-container');
 
   if (quizData && quizData.length > 0) {
@@ -249,11 +295,6 @@ No vocabulary generated.
       itemDiv.appendChild(expDiv);
       quizContainer.appendChild(itemDiv);
     });
-  }
-
-  function toggleAnswer() {
-    const ans = document.getElementById('dictation-answer');
-    ans.style.display = ans.style.display === 'none' ? 'block' : 'none';
   }
 </script>
 
