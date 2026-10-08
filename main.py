@@ -126,38 +126,22 @@ generated_text = f"""【今日のアクセント指定】
 {japanese_translation}
 """
 
-# 4. 音声合成＆MP3結合（公開用フォルダ public へ出力）
+# 4. 音声合成（アメリカ英語と指定アクセントを個別に生成）
 os.makedirs('public', exist_ok=True)
 
-gTTS(text='First, Standard American accent.', lang='en', tld='com').save(
-    'part1_intro.mp3'
-)
-gTTS(text=pitch_script, lang='en', tld='com').save('part1_script.mp3')
-gTTS(
-    text=f'Next, {selected_country} accent.', lang='en', tld='com'
-).save('part2_intro.mp3')
-gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(
-    'part2_script.mp3'
-)
+# 個別のプレイヤー用音声
+audio_us_filename = f'audio_us_{date_str}.mp3'
+audio_accent_filename = f'audio_accent_{date_str}.mp3'
 
-audio_filename = f'audio_{date_str}.mp3'
-audio_path = f'public/{audio_filename}'
-parts = [
-    'part1_intro.mp3',
-    'part1_script.mp3',
-    'part2_intro.mp3',
-    'part2_script.mp3',
-]
+gTTS(text=pitch_script, lang='en', tld='com').save(f'public/{audio_us_filename}')
+gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(f'public/{audio_accent_filename}')
 
-with open(audio_path, 'wb') as outfile:
-  for p in parts:
-    with open(p, 'rb') as infile:
-      outfile.write(infile.read())
-
+# バックアップ用
 with open('public/audio.mp3', 'wb') as outfile:
-  with open(audio_path, 'rb') as infile:
+  with open(f'public/{audio_us_filename}', 'rb') as infile:
     outfile.write(infile.read())
 
+# 補助パーツ用音声
 key_mp3_name = f'key_{date_str}.mp3'
 gTTS(text=clean_key_sentences, lang='en', tld='com').save(f'public/{key_mp3_name}')
 
@@ -169,7 +153,7 @@ for idx, item in enumerate(linking_data):
 for idx, st in enumerate(sentence_list):
   gTTS(text=st, lang='en', tld='com').save(f'public/st_{idx}_{date_str}.mp3')
 
-# 5. HTML作成
+# 5. HTML作成（2つの独立プレイヤーを配置）
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
 linking_json_str = json.dumps(linking_data, ensure_ascii=False)
 sentences_json_str = json.dumps(sentence_list, ensure_ascii=False)
@@ -190,15 +174,21 @@ html_content = f"""<!DOCTYPE html>
   .date-badge {{ font-size: 0.85em; color: #6c757d; margin-left: 8px; }}
   
   .sticky-player {{ position: sticky; top: 10px; z-index: 100; background: #212529; color: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-bottom: 24px; }}
-  .player-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }}
-  .player-title {{ font-weight: bold; font-size: 0.9em; color: #adb5bd; }}
+  .player-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }}
+  .player-title {{ font-weight: bold; font-size: 0.95em; color: #f8f9fa; }}
   
+  .player-box {{ background: #343a40; padding: 12px; border-radius: 8px; margin-bottom: 10px; }}
+  .player-box:last-child {{ margin-bottom: 0; }}
+  .player-label {{ font-size: 0.85em; font-weight: bold; color: #adb5bd; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }}
+  .badge-us {{ background: #0d6efd; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; }}
+  .badge-accent {{ background: #fd7e14; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; }}
+
   .speed-controls {{ display: flex; gap: 4px; flex-wrap: wrap; }}
-  .speed-btn {{ background: #343a40; color: #fff; border: 1px solid #495057; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8em; transition: all 0.2s; }}
-  .speed-btn:hover {{ background: #495057; }}
+  .speed-btn {{ background: #495057; color: #fff; border: 1px solid #6c757d; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8em; transition: all 0.2s; }}
+  .speed-btn:hover {{ background: #6c757d; }}
   .speed-btn.active {{ background: #0d6efd; border-color: #0d6efd; font-weight: bold; }}
   
-  audio {{ width: 100%; }}
+  audio {{ width: 100%; height: 36px; }}
   h2 {{ color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }}
   
   .key-card {{ background: #fff3cd; border-left: 6px solid #ffc107; padding: 16px; border-radius: 8px; margin-bottom: 20px; }}
@@ -252,9 +242,10 @@ html_content = f"""<!DOCTYPE html>
   <span class="date-badge">📅 {date_str}</span>
 </div>
 
+<!-- 分離型 PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
-    <div class="player-title">PLAYER</div>
+    <div class="player-title">AUDIO PLAYERS</div>
     <div class="speed-controls">
       <button class="speed-btn" onclick="setSpeed(0.6, this)">0.6x</button>
       <button class="speed-btn" onclick="setSpeed(0.7, this)">0.7x</button>
@@ -264,7 +255,18 @@ html_content = f"""<!DOCTYPE html>
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="{audio_filename}?v={timestamp}" autoplay></audio>
+
+  <!-- PLAYER 1: アメリカ英語 -->
+  <div class="player-box">
+    <div class="player-label"><span class="badge-us">US</span> 1. 標準アメリカ英語</div>
+    <audio id="player-us" controls src="{audio_us_filename}?v={timestamp}" onplay="pauseOther(this)"></audio>
+  </div>
+
+  <!-- PLAYER 2: 本日指定アクセント -->
+  <div class="player-box">
+    <div class="player-label"><span class="badge-accent">{selected_country}</span> 2. {selected_country}アクセント</div>
+    <audio id="player-accent" controls src="{audio_accent_filename}?v={timestamp}" onplay="pauseOther(this)"></audio>
+  </div>
 </div>
 
 <div class="card">
@@ -318,23 +320,35 @@ html_content = f"""<!DOCTYPE html>
 
   function setSpeed(rate, btn) {{
     currentSpeed = rate;
-    const audio = document.getElementById('audio-player');
-    audio.playbackRate = rate;
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (playerUs) playerUs.playbackRate = rate;
+    if (playerAccent) playerAccent.playbackRate = rate;
     currentAudio.playbackRate = rate;
+    
     document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }}
 
+  // 片方が再生されたらもう一方を一時停止
+  function pauseOther(current) {{
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (current !== playerUs && playerUs) playerUs.pause();
+    if (current !== playerAccent && playerAccent) playerAccent.pause();
+  }}
+
   function playAudioFile(file) {{
-    const mainPlayer = document.getElementById('audio-player');
-    if (mainPlayer) mainPlayer.pause();
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (playerUs) playerUs.pause();
+    if (playerAccent) playerAccent.pause();
     
     currentAudio.src = file + '?v={timestamp}';
     currentAudio.playbackRate = currentSpeed;
     currentAudio.play();
   }}
 
-  // 比較時に記号や空白を整える標準化関数
   function normalizeText(text) {{
     return text.toLowerCase().replace(/[^a-z0-9]/g, '');
   }}
@@ -489,7 +503,7 @@ with open('public/index.html', 'w', encoding='utf-8') as f:
 
 email_body = f"""本日のシャドーイング教材が更新されました！
 
-リンキング特化型ディクテーション（自動判定機能付き）や段階的シャドーイング機能を搭載した専用Webページが開きます。
+標準アメリカ英語と{selected_country}アクセントの聴き比べプレイヤー、リンキング特化型ディクテーション（自動判定機能付き）を搭載した専用Webページが開きます。
 
 👉 今日の学習ページを開く:
 {page_url}
