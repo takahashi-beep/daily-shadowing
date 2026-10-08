@@ -14,15 +14,21 @@
   .date-badge { font-size: 0.85em; color: #6c757d; margin-left: 8px; }
   
   .sticky-player { position: sticky; top: 10px; z-index: 100; background: #212529; color: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-bottom: 24px; }
-  .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
-  .player-title { font-weight: bold; font-size: 0.9em; color: #adb5bd; }
+  .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .player-title { font-weight: bold; font-size: 0.95em; color: #f8f9fa; }
   
+  .player-box { background: #343a40; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
+  .player-box:last-child { margin-bottom: 0; }
+  .player-label { font-size: 0.85em; font-weight: bold; color: #adb5bd; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .badge-us { background: #0d6efd; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; }
+  .badge-accent { background: #fd7e14; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; }
+
   .speed-controls { display: flex; gap: 4px; flex-wrap: wrap; }
-  .speed-btn { background: #343a40; color: #fff; border: 1px solid #495057; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8em; transition: all 0.2s; }
-  .speed-btn:hover { background: #495057; }
+  .speed-btn { background: #495057; color: #fff; border: 1px solid #6c757d; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8em; transition: all 0.2s; }
+  .speed-btn:hover { background: #6c757d; }
   .speed-btn.active { background: #0d6efd; border-color: #0d6efd; font-weight: bold; }
   
-  audio { width: 100%; }
+  audio { width: 100%; height: 36px; }
   h2 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 6px; font-size: 1.25em; margin-top: 0; }
   
   .key-card { background: #fff3cd; border-left: 6px solid #ffc107; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
@@ -72,13 +78,14 @@
 
 <div class="card">
   <h1>🎧 Daily Shadowing</h1>
-  <span class="tag">アクセント: 標準アメリカ ＆ インド</span>
+  <span class="tag">アクセント: 標準アメリカ ＆ オーストラリア</span>
   <span class="date-badge">📅 2026-10-08</span>
 </div>
 
+<!-- 分離型 PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
-    <div class="player-title">PLAYER</div>
+    <div class="player-title">AUDIO PLAYERS</div>
     <div class="speed-controls">
       <button class="speed-btn" onclick="setSpeed(0.6, this)">0.6x</button>
       <button class="speed-btn" onclick="setSpeed(0.7, this)">0.7x</button>
@@ -88,25 +95,36 @@
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio_2026-10-08.mp3?v=1791453172" autoplay></audio>
+
+  <!-- PLAYER 1: アメリカ英語 -->
+  <div class="player-box">
+    <div class="player-label"><span class="badge-us">US</span> 1. 標準アメリカ英語</div>
+    <audio id="player-us" controls src="audio_us_2026-10-08.mp3?v=1791453635" onplay="pauseOther(this)"></audio>
+  </div>
+
+  <!-- PLAYER 2: 本日指定アクセント -->
+  <div class="player-box">
+    <div class="player-label"><span class="badge-accent">オーストラリア</span> 2. オーストラリアアクセント</div>
+    <audio id="player-accent" controls src="audio_accent_2026-10-08.mp3?v=1791453635" onplay="pauseOther(this)"></audio>
+  </div>
 </div>
 
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
-  <div class="script-text">Ladies and gentlemen, I am here to present our innovative solution that tackles the global challenge of water scarcity. Our startup, AquaPure, offers a cutting-edge filtration technology that transforms contaminated water into clean, drinkable water in real-time. Our business model includes direct sales to municipalities and scalable subscription plans for industrial clients. With a global market exceeding $200 billion, the demand for sustainable water solutions is immense. Our technology&#x27;s patent-pending design creates a significant barrier to entry, giving us a competitive edge. Already, we have successful pilot projects in India and Southeast Asia, demonstrating both efficacy and demand. We seek $2 million in funding to expand production capabilities and enhance R&amp;D efforts. Join us as we pave the way for a sustainable future through innovative water purification.</div>
+  <div class="script-text">Good day, everyone. At TechHealth, we tackle the critical challenge of bridging the gap in personalized healthcare. Our innovative solution is a unique AI platform that analyzes real-time health data to provide bespoke health recommendations. Our business model is subscription-based, targeting health-conscious individuals and healthcare providers globally. The healthcare analytics market is poised to reach $45 billion by 2025, providing a vast opportunity for growth. Our technology is protected by robust patents, ensuring a solid barrier to entry. Currently, we&#x27;ve achieved a 20% user growth month-over-month and are generating revenue. The funds raised will be used for scaling operations, enhancing our AI&#x27;s capabilities, and expanding our international reach. Together, let&#x27;s revolutionize personalized healthcare.</div>
 </div>
 
 <div class="card">
   <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
-  <div class="slash-text">Ladies and gentlemen, / I am here to <b>present</b> our <b>innovative</b> solution / that <b>tackles</b> the <b>global</b> challenge / of <b>water</b> scarcity. / Our startup, AquaPure, / offers a <b>cutting-edge</b> filtration <b>technology</b> / that <b>transforms</b> <b>contaminated</b> water into <b>clean</b>, drinkable water / in <b>real-time</b>. / Our <b>business</b> model / includes <b>direct</b> sales / to <b>municipalities</b> and scalable subscription <b>plans</b> / for <b>industrial</b> clients. / With a <b>global</b> market / <b>exceeding</b> $200 billion, / the <b>demand</b> for <b>sustainable</b> water solutions / is <b>immense</b>. / Our technology's <b>patent-pending</b> design / creates a <b>significant</b> barrier / to <b>entry</b>, / giving us a <b>competitive</b> edge. / Already, we have <b>successful</b> pilot projects / in <b>India</b> and <b>Southeast</b> Asia, / <b>demonstrating</b> both <b>efficacy</b> and <b>demand</b>. / We <b>seek</b> $2 million / in <b>funding</b> / to <b>expand</b> production capabilities / and <b>enhance</b> R&D <b>efforts</b>. / Join us as we <b>pave</b> the way / for a <b>sustainable</b> future / through <b>innovative</b> water purification.</div>
+  <div class="slash-text">Good day, everyone. / At TechHealth, / we <b>tackle</b> / the <b>critical</b> <b>challenge</b> / of bridging the <b>gap</b> / in personalized healthcare. / Our <b>innovative</b> solution / is a unique AI <b>platform</b> / that analyzes real-time health data / to provide <b>bespoke</b> health recommendations. / Our <b>business</b> model / is <b>subscription-based</b>, / targeting health-conscious individuals / and healthcare providers / globally. / The healthcare <b>analytics</b> market / is poised to reach $45 billion / by 2025, / providing a vast <b>opportunity</b> / for growth. / Our <b>technology</b> is protected / by robust <b>patents</b>, / ensuring a solid barrier / to entry. / Currently, we've achieved / a 20% user growth / month-over-month / and are generating revenue. / The funds raised / will be used / for scaling operations, / enhancing our AI's capabilities, / and expanding our international reach. / Together, let's <b>revolutionize</b> / personalized healthcare.</div>
 </div>
 
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
     <button class="play-sentence-btn" onclick="playAudioFile('key_2026-10-08.mp3')">▶ 再生</button>
-    <div class="key-text-content">Our <b>business</b> model / includes <b>direct</b> sales / to <b>municipalities</b> and scalable subscription <b>plans</b> / for <b>industrial</b> clients.</div>
+    <div class="key-text-content">At TechHealth, / we <b>tackle</b> / the <b>critical</b> <b>challenge</b> / of bridging / the <b>gap</b> / in personalized healthcare. Our <b>business</b> model / is <b>subscription-based</b>, / targeting health-conscious individuals / and healthcare providers / globally.</div>
   </div>
 </div>
 
@@ -134,16 +152,16 @@
 <div class="card">
   <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">【今日のアクセント指定】
-インド
+オーストラリア
 
 【Pitch Script】
-Ladies and gentlemen, I am here to present our innovative solution that tackles the global challenge of water scarcity. Our startup, AquaPure, offers a cutting-edge filtration technology that transforms contaminated water into clean, drinkable water in real-time. Our business model includes direct sales to municipalities and scalable subscription plans for industrial clients. With a global market exceeding $200 billion, the demand for sustainable water solutions is immense. Our technology&#x27;s patent-pending design creates a significant barrier to entry, giving us a competitive edge. Already, we have successful pilot projects in India and Southeast Asia, demonstrating both efficacy and demand. We seek $2 million in funding to expand production capabilities and enhance R&amp;D efforts. Join us as we pave the way for a sustainable future through innovative water purification.
+Good day, everyone. At TechHealth, we tackle the critical challenge of bridging the gap in personalized healthcare. Our innovative solution is a unique AI platform that analyzes real-time health data to provide bespoke health recommendations. Our business model is subscription-based, targeting health-conscious individuals and healthcare providers globally. The healthcare analytics market is poised to reach $45 billion by 2025, providing a vast opportunity for growth. Our technology is protected by robust patents, ensuring a solid barrier to entry. Currently, we&#x27;ve achieved a 20% user growth month-over-month and are generating revenue. The funds raised will be used for scaling operations, enhancing our AI&#x27;s capabilities, and expanding our international reach. Together, let&#x27;s revolutionize personalized healthcare.
 
 【Vocabulary &amp; Key Phrases】
 No vocabulary generated.
 
 【日本語訳】
-皆様、本日は、水不足という世界的な課題を解決するために、当社の革新的なソリューションを紹介するために参りました。弊社AquaPureは、汚染水をリアルタイムで飲料水に変換する最先端のろ過技術を提供します。私たちのビジネスモデルには、自治体への直接販売と産業クライアント向けのスケーラブルなサブスクリプションプランが含まれています。2000億ドルを超える世界市場で、持続可能な水ソリューションの需要は非常に大きいです。私たちの技術の特許出願中のデザインは、参入障壁を作り、競争上の優位性をもたらします。すでにインドと東南アジアで成功したパイロットプロジェクトを持ち、その効果と需要を示しています。生産能力を拡大し、R&amp;Dの強化に200万ドルの資金を求めています。革新的な水浄化を通じて持続可能な未来を切り開く私たちに、ぜひお力をお貸しください。
+皆さん、こんにちは。TechHealthでは、個別化医療のギャップを埋めるという重要な課題に取り組んでいます。私たちの革新的なソリューションは、リアルタイムの健康データを解析し、オーダーメイドの健康推奨を提供する独自のAIプラットフォームです。私たちのビジネスモデルはサブスクリプションベースで、世界中の健康志向の個人と医療提供者をターゲットにしています。ヘルスケア分析市場は2025年までに450億ドルに達すると予想されており、成長の大きな機会があります。私たちの技術は強力な特許で保護されており、参入障壁を確保しています。現在、ユーザー数は毎月20％増加しており、収益を上げています。調達した資金は、事業の拡大、AIの能力の強化、および国際展開に使用されます。共に、個別化医療を革新していきましょう。
 </div>
 </div>
 
@@ -153,28 +171,39 @@ No vocabulary generated.
 
   function setSpeed(rate, btn) {
     currentSpeed = rate;
-    const audio = document.getElementById('audio-player');
-    audio.playbackRate = rate;
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (playerUs) playerUs.playbackRate = rate;
+    if (playerAccent) playerAccent.playbackRate = rate;
     currentAudio.playbackRate = rate;
+    
     document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }
 
+  function pauseOther(current) {
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (current !== playerUs && playerUs) playerUs.pause();
+    if (current !== playerAccent && playerAccent) playerAccent.pause();
+  }
+
   function playAudioFile(file) {
-    const mainPlayer = document.getElementById('audio-player');
-    if (mainPlayer) mainPlayer.pause();
+    const playerUs = document.getElementById('player-us');
+    const playerAccent = document.getElementById('player-accent');
+    if (playerUs) playerUs.pause();
+    if (playerAccent) playerAccent.pause();
     
-    currentAudio.src = file + '?v=1791453172';
+    currentAudio.src = file + '?v=1791453635';
     currentAudio.playbackRate = currentSpeed;
     currentAudio.play();
   }
 
-  // 比較時に記号や空白を整える標準化関数
   function normalizeText(text) {
     return text.toLowerCase().replace(/[^a-z0-9]/g, '');
   }
 
-  const linkingData = [{"sentence_with_blank": "Our startup, AquaPure, offers a cutting-edge filtration technology that transforms contaminated water into clean, drinkable water in [ _____ ].", "answer": "real-time", "explanation": "When 'in' is followed by 'real-time', the sounds can blend, making it sound like 'in-real-time'."}, {"sentence_with_blank": "We seek $2 million in funding to expand production capabilities and [ _____ ] efforts.", "answer": "enhance R&D", "explanation": "The sound 'd' at the end of 'expand' links with 'and', making it sound like 'expand-and'."}, {"sentence_with_blank": "With a global market exceeding $200 billion, the demand for sustainable water solutions is [ _____ ].", "answer": "immense", "explanation": "The end sound of 'solutions' blends with 'is', resulting in a smoother transition between words."}];
+  const linkingData = [{"sentence_with_blank": "Our business model is subscription-based, targeting [ _____ ] individuals and healthcare providers globally.", "answer": "health-conscious", "explanation": "'health-conscious' は 'h' と 'c' の間が繋がって聞き取りにくくなります。"}, {"sentence_with_blank": "The healthcare analytics market is poised to reach $45 billion by 2025, providing a vast [ _____ ] for growth.", "answer": "opportunity", "explanation": " 'a vast opportunity' は 't' が聞き取りづらくなり 'vast opportunity' として発音されます。"}, {"sentence_with_blank": "The funds raised will be used for scaling operations, enhancing our AI's capabilities, and [ _____ ] our international reach.", "answer": "expanding", "explanation": "'expanding our international reach' は 'g' が聞こえにくくなり、'expand-ing our' として流れます。"}];
   const linkingContainer = document.getElementById('linking-container');
 
   if (linkingData && linkingData.length > 0) {
@@ -189,9 +218,10 @@ No vocabulary generated.
       playBtn.innerHTML = '▶ 音声を聴く';
       playBtn.onclick = () => playAudioFile(fileName);
 
-      let qSentence = item.sentence_with_blank;
-      if (!qSentence.includes('[ _____ ]') && item.answer) {
-        qSentence = qSentence.replace(item.answer, '[ _____ ]');
+      let qSentence = item.sentence_with_blank || '';
+      const ansVal = item.answer || '';
+      if (!qSentence.includes('[ _____ ]') && ansVal) {
+        qSentence = qSentence.replace(ansVal, '[ _____ ]');
       }
 
       const qText = document.createElement('div');
@@ -217,16 +247,16 @@ No vocabulary generated.
 
       checkBtn.onclick = () => {
         const userVal = normalizeText(input.value);
-        const correctVal = normalizeText(item.answer);
+        const correctVal = normalizeText(ansVal);
         
         input.classList.remove('is-correct', 'is-incorrect');
 
         if (userVal !== '' && userVal === correctVal) {
           input.classList.add('is-correct');
-          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         } else {
           input.classList.add('is-incorrect');
-          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         }
         expDiv.style.display = 'block';
       };
@@ -243,7 +273,7 @@ No vocabulary generated.
     });
   }
 
-  const sentenceList = ["Ladies and gentlemen, I am here to present our innovative solution that tackles the global challenge of water scarcity.", "Our startup, AquaPure, offers a cutting-edge filtration technology that transforms contaminated water into clean, drinkable water in real-time.", "Our business model includes direct sales to municipalities and scalable subscription plans for industrial clients.", "With a global market exceeding $200 billion, the demand for sustainable water solutions is immense.", "Our technology's patent-pending design creates a significant barrier to entry, giving us a competitive edge.", "Already, we have successful pilot projects in India and Southeast Asia, demonstrating both efficacy and demand.", "We seek $2 million in funding to expand production capabilities and enhance R&D efforts.", "Join us as we pave the way for a sustainable future through innovative water purification."];
+  const sentenceList = ["Good day, everyone.", "At TechHealth, we tackle the critical challenge of bridging the gap in personalized healthcare.", "Our innovative solution is a unique AI platform that analyzes real-time health data to provide bespoke health recommendations.", "Our business model is subscription-based, targeting health-conscious individuals and healthcare providers globally.", "The healthcare analytics market is poised to reach $45 billion by 2025, providing a vast opportunity for growth.", "Our technology is protected by robust patents, ensuring a solid barrier to entry.", "Currently, we've achieved a 20% user growth month-over-month and are generating revenue.", "The funds raised will be used for scaling operations, enhancing our AI's capabilities, and expanding our international reach.", "Together, let's revolutionize personalized healthcare."];
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceList && sentenceList.length > 0) {
@@ -268,7 +298,7 @@ No vocabulary generated.
     });
   }
 
-  const quizData = [{"question": "What main issue does AquaPure's technology address?", "options": ["A. Air pollution", "B. Water scarcity", "C. Renewable energy", "D. Waste management"], "answer": "B", "explanation": "AquaPure's primary focus is on solving the challenge of water scarcity."}, {"question": "How does AquaPure plan to generate revenue?", "options": ["A. Through advertising", "B. By charging for consultations", "C. Direct sales and subscriptions", "D. Crowdfunding"], "answer": "C", "explanation": "The business model includes direct sales to municipalities and scalable subscription plans."}, {"question": "What competitive advantage does AquaPure claim to have?", "options": ["A. Largest workforce", "B. Most locations", "C. Patent-pending technology", "D. Lowest prices"], "answer": "C", "explanation": "AquaPure has a patent-pending design that acts as a significant barrier to entry."}];
+  const quizData = [{"question": "What is TechHealth's main business model?", "options": ["A. One-time purchase", "B. Subscription-based", "C. Advertising", "D. Donation"], "answer": "B", "explanation": "TechHealthのビジネスモデルはサブスクリプションベースです。"}, {"question": "How much is the healthcare analytics market expected to reach by 2025?", "options": ["A. $10 billion", "B. $20 billion", "C. $45 billion", "D. $100 billion"], "answer": "C", "explanation": "2025年までにヘルスケア分析市場は450億ドルに達すると予想されています。"}, {"question": "What will the raised funds be used for?", "options": ["A. Buying more patents", "B. Hiring a new team", "C. Enhancing AI capabilities and international expansion", "D. Launching a new product"], "answer": "C", "explanation": "調達した資金は、AIの強化と国際展開に使用されます。"}];
   const quizContainer = document.getElementById('quiz-container');
 
   if (quizData && quizData.length > 0) {
@@ -283,31 +313,33 @@ No vocabulary generated.
 
       const expDiv = document.createElement('div');
       expDiv.className = 'quiz-exp';
-      expDiv.innerHTML = '<strong>解説:</strong> ' + q.explanation;
+      expDiv.innerHTML = '<strong>解説:</strong> ' + (q.explanation || '');
 
-      q.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'quiz-opt';
-        btn.textContent = opt;
-        btn.onclick = () => {
-          const siblings = itemDiv.querySelectorAll('.quiz-opt');
-          siblings.forEach(s => s.disabled = true);
+      if (q.options && Array.isArray(q.options)) {
+        q.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'quiz-opt';
+          btn.textContent = opt;
+          btn.onclick = () => {
+            const siblings = itemDiv.querySelectorAll('.quiz-opt');
+            siblings.forEach(s => s.disabled = true);
 
-          const selectedSymbol = opt.trim().charAt(0);
-          if (selectedSymbol === q.answer) {
-            btn.classList.add('correct');
-          } else {
-            btn.classList.add('incorrect');
-            siblings.forEach(s => {
-              if (s.textContent.trim().charAt(0) === q.answer) {
-                s.classList.add('correct');
-              }
-            });
-          }
-          expDiv.style.display = 'block';
-        };
-        itemDiv.appendChild(btn);
-      });
+            const selectedSymbol = opt.trim().charAt(0);
+            if (selectedSymbol === q.answer) {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+              siblings.forEach(s => {
+                if (s.textContent.trim().charAt(0) === q.answer) {
+                  s.classList.add('correct');
+                }
+              });
+            }
+            expDiv.style.display = 'block';
+          };
+          itemDiv.appendChild(btn);
+        });
+      }
 
       itemDiv.appendChild(expDiv);
       quizContainer.appendChild(itemDiv);
