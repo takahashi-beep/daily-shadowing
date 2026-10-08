@@ -53,7 +53,12 @@
   .linking-item { background: #f8f9fa; border: 1px solid #e9ecef; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
   .linking-q { font-size: 1.05em; margin-bottom: 8px; line-height: 1.6; }
   .linking-input-group { display: flex; gap: 8px; margin: 10px 0; }
-  .linking-input { flex: 1; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 1em; }
+  .linking-input { flex: 1; padding: 8px 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 1em; transition: all 0.2s; }
+  .linking-input.is-correct { border-color: #198754; background-color: #e8f5e9; color: #0f5132; font-weight: bold; }
+  .linking-input.is-incorrect { border-color: #dc3545; background-color: #ffebee; color: #842029; }
+  .status-badge { font-weight: bold; margin-bottom: 6px; font-size: 0.95em; display: inline-block; padding: 2px 8px; border-radius: 4px; }
+  .status-badge.correct { background: #d1e7dd; color: #0f5132; }
+  .status-badge.incorrect { background: #f8d7da; color: #842029; }
 
   details { background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
   summary { padding: 18px 24px; font-weight: bold; font-size: 1.1em; color: #1a237e; cursor: pointer; background: #fff; user-select: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }
@@ -67,7 +72,7 @@
 
 <div class="card">
   <h1>🎧 Daily Shadowing</h1>
-  <span class="tag">アクセント: 標準アメリカ ＆ フィリピン</span>
+  <span class="tag">アクセント: 標準アメリカ ＆ シンガポール</span>
   <span class="date-badge">📅 2026-10-08</span>
 </div>
 
@@ -83,25 +88,25 @@
       <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
     </div>
   </div>
-  <audio id="audio-player" controls src="audio_2026-10-08.mp3?v=1791452776" autoplay></audio>
+  <audio id="audio-player" controls src="audio_2026-10-08.mp3?v=1791453013" autoplay></audio>
 </div>
 
 <div class="card">
   <h2>📖 Pitch Script (全文原稿)</h2>
-  <div class="script-text">Good day, everyone. We are ElevateTech, a renewable energy startup based in the Philippines. Our mission is to address the critical shortage of sustainable energy solutions in Southeast Asia. By harnessing the power of our cutting-edge solar panel technology, we offer an affordable, scalable, and eco-friendly alternative to traditional energy sources. Our business model is simple: we provide solar energy systems on a subscription basis, minimizing upfront costs for our clients. Currently, the renewable energy market in Southeast Asia is projected to reach $20 billion by 2025, and we are uniquely positioned with our patent-pending technology, creating significant entry barriers for competitors. Since our launch last year, we&#x27;ve secured contracts with three major corporations, reducing their energy costs by 30%. With this investment, we aim to scale operations, enhance R&amp;D, and expand our market reach. Join us in revolutionizing the energy landscape in Southeast Asia.</div>
+  <div class="script-text">Good afternoon, investors! We are QuantumSync, a Singapore-based startup revolutionizing logistics with our quantum computing solutions. The logistics industry faces the critical challenge of optimizing supply chains amidst increasing demands. Our SaaS platform leverages quantum algorithms to enhance routing efficiency, reducing costs by 30%. Our business model focuses on subscription fees and licensing for large enterprises, tapping into a $300 billion global market. Our barriers to entry include proprietary algorithms and existing partnerships with industry giants. We&#x27;ve successfully completed pilot programs with top-tier logistics firms, demonstrating a 20% improvement in delivery speed. We&#x27;re seeking $5 million in funding to scale our technology and expand our market reach. Join us in transforming logistics with unparalleled efficiency.</div>
 </div>
 
 <div class="card">
   <h2>🎵 スラッシュ＆リズム表示テキスト</h2>
   <p style="font-size: 0.85em; color: #6c757d; margin-top: -6px;">/ : 息継ぎ・意識の区切り | <b style="color: #0d6efd;">青太字</b> : 強く発音する単語</p>
-  <div class="slash-text">Good day, everyone. / We are ElevateTech, a renewable <b>energy</b> startup / based in the Philippines. / Our <b>mission</b> is to address the critical shortage / of sustainable energy solutions / in Southeast Asia. / By harnessing the <b>power</b> of our cutting-edge solar panel <b>technology</b>, / we offer / an affordable, scalable, and eco-friendly <b>alternative</b> / to traditional energy sources. / Our <b>business</b> model is simple: / we provide solar <b>energy</b> systems / on a subscription <b>basis</b>, minimizing upfront costs / for our <b>clients</b>. / Currently, the renewable <b>energy</b> market / in Southeast Asia is projected / to reach $20 billion by 2025, / and we are uniquely positioned / with our patent-pending <b>technology</b>, / creating significant entry barriers / for competitors. / Since our <b>launch</b> last year, / we've secured contracts / with three major <b>corporations</b>, reducing / their energy costs by 30%. / With this <b>investment</b>, we aim / to scale operations, / enhance R&D, / and expand our market reach. / Join us / in revolutionizing the energy landscape / in Southeast Asia.</div>
+  <div class="slash-text">Good afternoon, / investors! / We are <b>QuantumSync</b>, / a <b>Singapore</b>-based startup / revolutionizing <b>logistics</b> / with our <b>quantum computing</b> solutions. / The <b>logistics</b> industry / faces the critical challenge / of <b>optimizing</b> supply chains / amidst increasing demands. / Our <b>SaaS</b> platform / leverages <b>quantum</b> algorithms / to <b>enhance</b> routing efficiency, / reducing <b>costs</b> by 30%. / Our business model / focuses on subscription fees / and <b>licensing</b> for large enterprises, / tapping into / a $300 billion global market. / Our barriers to entry / include proprietary algorithms / and existing <b>partnerships</b> / with industry giants. / We've successfully completed pilot programs / with top-tier logistics firms, / demonstrating a 20% improvement / in delivery speed. / We're seeking $5 million in funding / to <b>scale</b> our technology / and expand our market reach. / Join us in transforming <b>logistics</b> / with unparalleled efficiency.</div>
 </div>
 
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
     <button class="play-sentence-btn" onclick="playAudioFile('key_2026-10-08.mp3')">▶ 再生</button>
-    <div class="key-text-content">By harnessing / the <b>power</b> of our / cutting-edge <b>solar</b> panel <b>technology</b>, / we offer an / affordable, scalable, and eco-friendly / <b>alternative</b> to traditional energy sources.</div>
+    <div class="key-text-content">Our <b>SaaS</b> platform / leverages <b>quantum</b> algorithms / to <b>enhance</b> routing efficiency, / reducing <b>costs</b> by 30%.</div>
   </div>
 </div>
 
@@ -129,16 +134,16 @@
 <div class="card">
   <h2>📚 全文テキスト＆注釈・解説</h2>
   <div class="vocab-list">【今日のアクセント指定】
-フィリピン
+シンガポール
 
 【Pitch Script】
-Good day, everyone. We are ElevateTech, a renewable energy startup based in the Philippines. Our mission is to address the critical shortage of sustainable energy solutions in Southeast Asia. By harnessing the power of our cutting-edge solar panel technology, we offer an affordable, scalable, and eco-friendly alternative to traditional energy sources. Our business model is simple: we provide solar energy systems on a subscription basis, minimizing upfront costs for our clients. Currently, the renewable energy market in Southeast Asia is projected to reach $20 billion by 2025, and we are uniquely positioned with our patent-pending technology, creating significant entry barriers for competitors. Since our launch last year, we&#x27;ve secured contracts with three major corporations, reducing their energy costs by 30%. With this investment, we aim to scale operations, enhance R&amp;D, and expand our market reach. Join us in revolutionizing the energy landscape in Southeast Asia.
+Good afternoon, investors! We are QuantumSync, a Singapore-based startup revolutionizing logistics with our quantum computing solutions. The logistics industry faces the critical challenge of optimizing supply chains amidst increasing demands. Our SaaS platform leverages quantum algorithms to enhance routing efficiency, reducing costs by 30%. Our business model focuses on subscription fees and licensing for large enterprises, tapping into a $300 billion global market. Our barriers to entry include proprietary algorithms and existing partnerships with industry giants. We&#x27;ve successfully completed pilot programs with top-tier logistics firms, demonstrating a 20% improvement in delivery speed. We&#x27;re seeking $5 million in funding to scale our technology and expand our market reach. Join us in transforming logistics with unparalleled efficiency.
 
 【Vocabulary &amp; Key Phrases】
 No vocabulary generated.
 
 【日本語訳】
-皆さん、こんにちは。私たちはフィリピンに拠点を置く再生可能エネルギースタートアップ、ElevateTechです。私たちの使命は、東南アジアにおける持続可能なエネルギーソリューションの深刻な不足に対応することです。最先端の太陽光パネル技術の力を活用し、従来のエネルギー源に代わる手頃な価格でスケーラブルで環境に優しい代替策を提供します。私たちのビジネスモデルはシンプルです。サブスクリプションベースで太陽光エネルギーシステムを提供し、クライアントの初期費用を最小限に抑えます。東南アジアの再生可能エネルギー市場は2025年までに200億ドルに達すると予測されており、特許出願中の技術で競合他社に大きな参入障壁を築いています。昨年の立ち上げ以来、3つの大企業と契約を結び、エネルギーコストを30％削減しました。この投資により、事業拡大、研究開発の強化、市場範囲の拡大を目指しています。東南アジアのエネルギーの風景を変革するために、私たちと一緒に歩んでください。
+こんにちは、投資家の皆様！私たちはシンガポールを拠点とするスタートアップ、QuantumSyncです。当社の量子コンピューティングソリューションで物流を革命化しています。物流業界は、増加する需要の中で供給チェーンを最適化するという重要な課題に直面しています。当社のSaaSプラットフォームは、量子アルゴリズムを活用してルーティング効率を高め、コストを30%削減します。ビジネスモデルは、大企業向けのサブスクリプション料金とライセンスに焦点を当て、3,000億ドルのグローバル市場に参入しています。参入障壁には、専有アルゴリズムと既存の業界大手とのパートナーシップが含まれます。トップクラスの物流企業とのパイロットプログラムを成功裏に完了し、納品速度の20%向上を実現しました。当社は技術のスケールアップと市場の拡大のために500万ドルの資金調達を求めています。物流を比類なき効率で変革する私たちにぜひご参加ください。
 </div>
 </div>
 
@@ -159,12 +164,17 @@ No vocabulary generated.
     const mainPlayer = document.getElementById('audio-player');
     if (mainPlayer) mainPlayer.pause();
     
-    currentAudio.src = file + '?v=1791452776';
+    currentAudio.src = file + '?v=1791453013';
     currentAudio.playbackRate = currentSpeed;
     currentAudio.play();
   }
 
-  const linkingData = [{"sentence_with_blank": "Our business model is simple: we provide solar [ _____ ] a subscription basis.", "answer": "energy systems on", "explanation": "The sounds in 'energy systems on' may connect, making 'systems' and 'on' blend together."}, {"sentence_with_blank": "Currently, the renewable energy market in Southeast Asia is projected [ _____ ] $20 billion by 2025.", "answer": "to reach", "explanation": "The sounds between 'projected' and 'to' may blend, making them sound like one word."}, {"sentence_with_blank": "Join us in revolutionizing the energy [ _____ ] Southeast Asia.", "answer": "landscape in", "explanation": "The blending between 'landscape' and 'in' might make the transition less clear."}];
+  // 比較時に記号や空白を整える標準化関数
+  function normalizeText(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  const linkingData = [{"sentence_with_blank": "join us [ _____ ] transforming logistics with unparalleled efficiency.", "answer": "in transforming", "explanation": "The linking sounds like 'in' blending into 'transforming'."}, {"sentence_with_blank": "solutions. The logistics industry [ _____ ] the critical challenge of optimizing supply chains.", "answer": "faces the", "explanation": "The 's' at the end of 'faces' and 'th' sounds at the beginning of 'the' might blend together."}, {"sentence_with_blank": "completed pilot programs [ _____ ] top-tier logistics firms.", "answer": "with top-tier", "explanation": "The 'th' in 'with' and 't' in 'top-tier' can link smoothly."}];
   const linkingContainer = document.getElementById('linking-container');
 
   if (linkingData && linkingData.length > 0) {
@@ -179,7 +189,6 @@ No vocabulary generated.
       playBtn.innerHTML = '▶ 音声を聴く';
       playBtn.onclick = () => playAudioFile(fileName);
 
-      // 万が一正解単語が文中にそのまま残っている場合は確実に [ _____ ] に置換するガード処理
       let qSentence = item.sentence_with_blank;
       if (!qSentence.includes('[ _____ ]') && item.answer) {
         qSentence = qSentence.replace(item.answer, '[ _____ ]');
@@ -205,9 +214,20 @@ No vocabulary generated.
 
       const expDiv = document.createElement('div');
       expDiv.className = 'quiz-exp';
-      expDiv.innerHTML = '<strong>正解:</strong> <span style="color:#0d6efd; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
 
       checkBtn.onclick = () => {
+        const userVal = normalizeText(input.value);
+        const correctVal = normalizeText(item.answer);
+        
+        input.classList.remove('is-correct', 'is-incorrect');
+
+        if (userVal !== '' && userVal === correctVal) {
+          input.classList.add('is-correct');
+          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+        } else {
+          input.classList.add('is-incorrect');
+          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+        }
         expDiv.style.display = 'block';
       };
 
@@ -223,7 +243,7 @@ No vocabulary generated.
     });
   }
 
-  const sentenceList = ["Good day, everyone.", "We are ElevateTech, a renewable energy startup based in the Philippines.", "Our mission is to address the critical shortage of sustainable energy solutions in Southeast Asia.", "By harnessing the power of our cutting-edge solar panel technology, we offer an affordable, scalable, and eco-friendly alternative to traditional energy sources.", "Our business model is simple: we provide solar energy systems on a subscription basis, minimizing upfront costs for our clients.", "Currently, the renewable energy market in Southeast Asia is projected to reach $20 billion by 2025, and we are uniquely positioned with our patent-pending technology, creating significant entry barriers for competitors.", "Since our launch last year, we've secured contracts with three major corporations, reducing their energy costs by 30%.", "With this investment, we aim to scale operations, enhance R&D, and expand our market reach.", "Join us in revolutionizing the energy landscape in Southeast Asia."];
+  const sentenceList = ["Good afternoon, investors!", "We are QuantumSync, a Singapore-based startup revolutionizing logistics with our quantum computing solutions.", "The logistics industry faces the critical challenge of optimizing supply chains amidst increasing demands.", "Our SaaS platform leverages quantum algorithms to enhance routing efficiency, reducing costs by 30%.", "Our business model focuses on subscription fees and licensing for large enterprises, tapping into a $300 billion global market.", "Our barriers to entry include proprietary algorithms and existing partnerships with industry giants.", "We've successfully completed pilot programs with top-tier logistics firms, demonstrating a 20% improvement in delivery speed.", "We're seeking $5 million in funding to scale our technology and expand our market reach.", "Join us in transforming logistics with unparalleled efficiency."];
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceList && sentenceList.length > 0) {
@@ -248,7 +268,7 @@ No vocabulary generated.
     });
   }
 
-  const quizData = [{"question": "What problem is ElevateTech aiming to solve?", "options": ["A shortage of traditional energy sources.", "A lack of affordable technology.", "A critical shortage of sustainable energy solutions.", "A decreasing demand for renewable energy."], "answer": "C", "explanation": "ElevateTech is focused on solving the critical shortage of sustainable energy solutions."}, {"question": "How does ElevateTech plan to minimize upfront costs for its clients?", "options": ["By providing free installation of solar panels.", "By offering energy systems on a subscription basis.", "By selling solar panels at a discounted rate.", "By partnering with local governments."], "answer": "B", "explanation": "ElevateTech uses a subscription model to minimize upfront costs for clients."}, {"question": "What percentage did ElevateTech reduce energy costs for their corporate clients?", "options": ["20%", "25%", "30%", "35%"], "answer": "C", "explanation": "ElevateTech managed to reduce energy costs by 30% for their corporate clients."}];
+  const quizData = [{"question": "What problem does QuantumSync aim to solve?", "options": ["A) Increase production costs", "B) Logistics supply chain optimization", "C) Decrease customer satisfaction", "D) Improve entertainment experiences"], "answer": "B", "explanation": "QuantumSync aims to optimize supply chains within the logistics industry."}, {"question": "How does QuantumSync plan to generate revenue?", "options": ["A) Advertising", "B) Donations", "C) Subscription fees and licensing", "D) Single product sales"], "answer": "C", "explanation": "Their business model focuses on subscription fees and licensing for large enterprises."}, {"question": "What is the projected cost reduction achieved by QuantumSync's platform?", "options": ["A) 10%", "B) 20%", "C) 30%", "D) 40%"], "answer": "C", "explanation": "QuantumSync's platform aims to reduce routing costs by 30%."}];
   const quizContainer = document.getElementById('quiz-container');
 
   if (quizData && quizData.length > 0) {
