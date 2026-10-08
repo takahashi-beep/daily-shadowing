@@ -129,6 +129,7 @@ generated_text = f"""【今日のアクセント指定】
 # 4. 音声合成＆MP3結合（公開用フォルダ public へ出力）
 os.makedirs('public', exist_ok=True)
 
+# メイン音声の生成
 gTTS(text='First, Standard American accent.', lang='en', tld='com').save(
     'part1_intro.mp3'
 )
@@ -157,6 +158,22 @@ with open(audio_path, 'wb') as outfile:
 with open('public/audio.mp3', 'wb') as outfile:
   with open(audio_path, 'rb') as infile:
     outfile.write(infile.read())
+
+# --- 【解決策】個別のボタン用にもgTTS（本物ネイティブ音声）のMP3ファイルを生成 ---
+# 1. 重点センテンス用
+key_mp3_name = f'key_{date_str}.mp3'
+gTTS(text=clean_key_sentences, lang='en', tld='com').save(f'public/{key_mp3_name}')
+
+# 2. リンキングディクテーション用
+for idx, item in enumerate(linking_data):
+  full_st = item.get('sentence_with_blank', '').replace('[ _____ ]', item.get('answer', ''))
+  if full_st:
+    gTTS(text=full_st, lang='en', tld='com').save(f'public/link_{idx}_{date_str}.mp3')
+
+# 3. 1文分割再生用
+for idx, st in enumerate(sentence_list):
+  gTTS(text=st, lang='en', tld='com').save(f'public/st_{idx}_{date_str}.mp3')
+
 
 # 5. HTML作成
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
@@ -266,7 +283,7 @@ html_content = f"""<!DOCTYPE html>
 <div class="key-card">
   <h3>🎯 今日の重点シャドーイング練習センテンス (Key Sentence)</h3>
   <div class="key-sentence-box">
-    <button class="play-sentence-btn" onclick="playText(`{html.escape(clean_key_sentences)}`)">▶ 再生</button>
+    <button class="play-sentence-btn" onclick="playAudioFile('{key_mp3_name}')">▶ 再生</button>
     <div class="key-text-content">{key_sentences}</div>
   </div>
 </div>
@@ -299,42 +316,26 @@ html_content = f"""<!DOCTYPE html>
 
 <script>
   let currentSpeed = 1.0;
+  const currentAudio = new Audio();
 
   function setSpeed(rate, btn) {{
     currentSpeed = rate;
     const audio = document.getElementById('audio-player');
     audio.playbackRate = rate;
+    currentAudio.playbackRate = rate;
     document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }}
 
-  // 確実に英語ネイティブの声を選択する厳格な再生関数
-  function playText(text) {{
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = currentSpeed;
+  // 本物のMP3音声ファイルを再生する確実な関数
+  function playAudioFile(file) {{
+    const mainPlayer = document.getElementById('audio-player');
+    if (mainPlayer) mainPlayer.pause();
     
-    const voices = window.speechSynthesis.getVoices();
-    // 言語がenで始まるボイスの中で、最も品質の高い米国/英国英語ボイスを検索
-    let selectedVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en_US');
-    if (!selectedVoice) {{
-      selectedVoice = voices.find(v => v.lang.startsWith('en'));
-    }}
-    
-    if (selectedVoice) {{
-      utter.voice = selectedVoice;
-    }}
-    
-    window.speechSynthesis.speak(utter);
+    currentAudio.src = file + '?v={timestamp}';
+    currentAudio.playbackRate = currentSpeed;
+    currentAudio.play();
   }}
-
-  // ページの読み込み直後に音声エンジンを初期化させる
-  window.addEventListener('DOMContentLoaded', () => {{
-    if (typeof speechSynthesis !== 'undefined') {{
-      speechSynthesis.getVoices();
-    }}
-  }});
 
   const linkingData = {linking_json_str};
   const linkingContainer = document.getElementById('linking-container');
@@ -344,12 +345,12 @@ html_content = f"""<!DOCTYPE html>
       const div = document.createElement('div');
       div.className = 'linking-item';
 
-      const fullSentence = item.sentence_with_blank.replace('[ _____ ]', item.answer);
+      const fileName = 'link_' + idx + '_{date_str}.mp3';
 
       const playBtn = document.createElement('button');
       playBtn.className = 'play-sentence-btn';
       playBtn.innerHTML = '▶ 音声を聴く';
-      playBtn.onclick = () => playText(fullSentence);
+      playBtn.onclick = () => playAudioFile(fileName);
 
       const qText = document.createElement('div');
       qText.className = 'linking-q';
@@ -402,10 +403,12 @@ html_content = f"""<!DOCTYPE html>
       const div = document.createElement('div');
       div.className = 'sentence-item';
       
+      const fileName = 'st_' + idx + '_{date_str}.mp3';
+      
       const btn = document.createElement('button');
       btn.className = 'play-sentence-btn';
       btn.innerHTML = '▶ 再生';
-      btn.onclick = () => playText(st);
+      btn.onclick = () => playAudioFile(fileName);
 
       const textSpan = document.createElement('span');
       textSpan.style.fontSize = '1em';
