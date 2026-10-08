@@ -330,7 +330,6 @@ html_content = f"""<!DOCTYPE html>
     btn.classList.add('active');
   }}
 
-  // 片方が再生されたらもう一方を一時停止
   function pauseOther(current) {{
     const playerUs = document.getElementById('player-us');
     const playerAccent = document.getElementById('player-accent');
@@ -368,9 +367,10 @@ html_content = f"""<!DOCTYPE html>
       playBtn.innerHTML = '▶ 音声を聴く';
       playBtn.onclick = () => playAudioFile(fileName);
 
-      let qSentence = item.sentence_with_blank;
-      if (!qSentence.includes('[ _____ ]') && item.answer) {{
-        qSentence = qSentence.replace(item.answer, '[ _____ ]');
+      let qSentence = item.sentence_with_blank || '';
+      const ansVal = item.answer || '';
+      if (!qSentence.includes('[ _____ ]') && ansVal) {{
+        qSentence = qSentence.replace(ansVal, '[ _____ ]');
       }}
 
       const qText = document.createElement('div');
@@ -396,16 +396,16 @@ html_content = f"""<!DOCTYPE html>
 
       checkBtn.onclick = () => {{
         const userVal = normalizeText(input.value);
-        const correctVal = normalizeText(item.answer);
+        const correctVal = normalizeText(ansVal);
         
         input.classList.remove('is-correct', 'is-incorrect');
 
         if (userVal !== '' && userVal === correctVal) {{
           input.classList.add('is-correct');
-          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         }} else {{
           input.classList.add('is-incorrect');
-          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         }}
         expDiv.style.display = 'block';
       }};
@@ -462,31 +462,33 @@ html_content = f"""<!DOCTYPE html>
 
       const expDiv = document.createElement('div');
       expDiv.className = 'quiz-exp';
-      expDiv.innerHTML = '<strong>解説:</strong> ' + q.explanation;
+      expDiv.innerHTML = '<strong>解説:</strong> ' + (q.explanation || '');
 
-      q.options.forEach(opt => {{
-        const btn = document.createElement('button');
-        btn.className = 'quiz-opt';
-        btn.textContent = opt;
-        btn.onclick = () => {{
-          const siblings = itemDiv.querySelectorAll('.quiz-opt');
-          siblings.forEach(s => s.disabled = true);
+      if (q.options && Array.isArray(q.options)) {{
+        q.options.forEach(opt => {{
+          const btn = document.createElement('button');
+          btn.className = 'quiz-opt';
+          btn.textContent = opt;
+          btn.onclick = () => {{
+            const siblings = itemDiv.querySelectorAll('.quiz-opt');
+            siblings.forEach(s => s.disabled = true);
 
-          const selectedSymbol = opt.trim().charAt(0);
-          if (selectedSymbol === q.answer) {{
-            btn.classList.add('correct');
-          }} else {{
-            btn.classList.add('incorrect');
-            siblings.forEach(s => {{
-              if (s.textContent.trim().charAt(0) === q.answer) {{
-                s.classList.add('correct');
-              }}
-            }});
-          }}
-          expDiv.style.display = 'block';
-        }};
-        itemDiv.appendChild(btn);
-      }});
+            const selectedSymbol = opt.trim().charAt(0);
+            if (selectedSymbol === q.answer) {{
+              btn.classList.add('correct');
+            }} else {{
+              btn.classList.add('incorrect');
+              siblings.forEach(s => {{
+                if (s.textContent.trim().charAt(0) === q.answer) {{
+                  s.classList.add('correct');
+                }}
+              }});
+            }}
+            expDiv.style.display = 'block';
+          }};
+          itemDiv.appendChild(btn);
+        }});
+      }}
 
       itemDiv.appendChild(expDiv);
       quizContainer.appendChild(itemDiv);
@@ -498,9 +500,11 @@ html_content = f"""<!DOCTYPE html>
 </html>
 """
 
+# トップページ用 (index.html) の書き出し
 with open('public/index.html', 'w', encoding='utf-8') as f:
   f.write(html_content)
 
+# 6. メール送信
 email_body = f"""本日のシャドーイング教材が更新されました！
 
 標準アメリカ英語と{selected_country}アクセントの聴き比べプレイヤー、リンキング特化型ディクテーション（自動判定機能付き）を搭載した専用Webページが開きます。
@@ -528,7 +532,8 @@ tracking_settings.click_tracking = ClickTracking(
 )
 message.tracking_settings = tracking_settings
 
-with open(audio_path, 'rb') as f:
+# 添付ファイル用（アメリカ英語音声）
+with open(f'public/{audio_us_filename}', 'rb') as f:
   data = f.read()
 
 message.attachment = Attachment(
