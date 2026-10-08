@@ -47,7 +47,7 @@ ACCENTS = {
 selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
-# 3. プロンプト定義と生成（カタカナヒント排除・穴埋め範囲厳格化）
+# 3. プロンプト定義と生成
 prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、および内容理解確認用のリンキング穴埋めディクテーション問題を作成し、JSON形式で出力してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n9. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（正解フレーズ部分を【正確に】 [ _____ ] と表記すること）、正解フレーズ(answer)、日本語の発音変化解説(explanation)を含めること（カタカナヒントは不要）。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (配列: question, options, answer, explanation), linking_dictation (配列: sentence_with_blank, answer, explanation)"
 
 response = client.chat.completions.create(
@@ -129,7 +129,6 @@ generated_text = f"""【今日のアクセント指定】
 # 4. 音声合成＆MP3結合（公開用フォルダ public へ出力）
 os.makedirs('public', exist_ok=True)
 
-# メイン音声の生成
 gTTS(text='First, Standard American accent.', lang='en', tld='com').save(
     'part1_intro.mp3'
 )
@@ -159,20 +158,16 @@ with open('public/audio.mp3', 'wb') as outfile:
   with open(audio_path, 'rb') as infile:
     outfile.write(infile.read())
 
-# 1. 重点センテンス用MP3
 key_mp3_name = f'key_{date_str}.mp3'
 gTTS(text=clean_key_sentences, lang='en', tld='com').save(f'public/{key_mp3_name}')
 
-# 2. リンキングディクテーション用MP3
 for idx, item in enumerate(linking_data):
   full_st = item.get('sentence_with_blank', '').replace('[ _____ ]', item.get('answer', ''))
   if full_st:
     gTTS(text=full_st, lang='en', tld='com').save(f'public/link_{idx}_{date_str}.mp3')
 
-# 3. 1文分割再生用MP3
 for idx, st in enumerate(sentence_list):
   gTTS(text=st, lang='en', tld='com').save(f'public/st_{idx}_{date_str}.mp3')
-
 
 # 5. HTML作成
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
@@ -234,7 +229,12 @@ html_content = f"""<!DOCTYPE html>
   .linking-item {{ background: #f8f9fa; border: 1px solid #e9ecef; padding: 16px; border-radius: 8px; margin-bottom: 16px; }}
   .linking-q {{ font-size: 1.05em; margin-bottom: 8px; line-height: 1.6; }}
   .linking-input-group {{ display: flex; gap: 8px; margin: 10px 0; }}
-  .linking-input {{ flex: 1; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 1em; }}
+  .linking-input {{ flex: 1; padding: 8px 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 1em; transition: all 0.2s; }}
+  .linking-input.is-correct {{ border-color: #198754; background-color: #e8f5e9; color: #0f5132; font-weight: bold; }}
+  .linking-input.is-incorrect {{ border-color: #dc3545; background-color: #ffebee; color: #842029; }}
+  .status-badge {{ font-weight: bold; margin-bottom: 6px; font-size: 0.95em; display: inline-block; padding: 2px 8px; border-radius: 4px; }}
+  .status-badge.correct {{ background: #d1e7dd; color: #0f5132; }}
+  .status-badge.incorrect {{ background: #f8d7da; color: #842029; }}
 
   details {{ background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }}
   summary {{ padding: 18px 24px; font-weight: bold; font-size: 1.1em; color: #1a237e; cursor: pointer; background: #fff; user-select: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }}
@@ -334,6 +334,11 @@ html_content = f"""<!DOCTYPE html>
     currentAudio.play();
   }}
 
+  // 比較時に記号や空白を整える標準化関数
+  function normalizeText(text) {{
+    return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }}
+
   const linkingData = {linking_json_str};
   const linkingContainer = document.getElementById('linking-container');
 
@@ -349,7 +354,6 @@ html_content = f"""<!DOCTYPE html>
       playBtn.innerHTML = '▶ 音声を聴く';
       playBtn.onclick = () => playAudioFile(fileName);
 
-      // 万が一正解単語が文中にそのまま残っている場合は確実に [ _____ ] に置換するガード処理
       let qSentence = item.sentence_with_blank;
       if (!qSentence.includes('[ _____ ]') && item.answer) {{
         qSentence = qSentence.replace(item.answer, '[ _____ ]');
@@ -375,9 +379,20 @@ html_content = f"""<!DOCTYPE html>
 
       const expDiv = document.createElement('div');
       expDiv.className = 'quiz-exp';
-      expDiv.innerHTML = '<strong>正解:</strong> <span style="color:#0d6efd; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
 
       checkBtn.onclick = () => {{
+        const userVal = normalizeText(input.value);
+        const correctVal = normalizeText(item.answer);
+        
+        input.classList.remove('is-correct', 'is-incorrect');
+
+        if (userVal !== '' && userVal === correctVal) {{
+          input.classList.add('is-correct');
+          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+        }} else {{
+          input.classList.add('is-incorrect');
+          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + item.explanation;
+        }}
         expDiv.style.display = 'block';
       }};
 
@@ -474,7 +489,7 @@ with open('public/index.html', 'w', encoding='utf-8') as f:
 
 email_body = f"""本日のシャドーイング教材が更新されました！
 
-リンキング特化型ディクテーション（3問）や段階的シャドーイング機能を搭載した専用Webページが開きます。
+リンキング特化型ディクテーション（自動判定機能付き）や段階的シャドーイング機能を搭載した専用Webページが開きます。
 
 👉 今日の学習ページを開く:
 {page_url}
