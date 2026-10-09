@@ -48,7 +48,35 @@ selected_country = random.choice(list(ACCENTS.keys()))
 accent_info = ACCENTS[selected_country]
 
 # 3. プロンプト定義と生成
-prompt = f"あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、および内容理解確認用のリンキング穴埋めディクテーション問題を作成し、JSON形式で出力してください。\n\n条件：\n1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。\n2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。\n3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。\n4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。\n5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。\n6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。\n7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。\n8. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。\n9. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（正解フレーズ部分を【正確に】 [ _____ ] と表記すること）、正解フレーズ(answer)、日本語の発音変化解説(explanation)を含めること（カタカナヒントは不要）。\n\nJSONキー: pitch_script, key_sentences, slash_script, vocabulary, japanese_translation, quiz (配列: question, options, answer, explanation), linking_dictation (配列: sentence_with_blank, answer, explanation)"
+prompt = f"""あなたは科学技術スタートアップの創業コンサルタント兼、英語教育の専門家です。以下の条件に従って、シャドーイング練習用の英語スクリプト、単語解説、段階的シャドーイング用テキスト、理解度クイズ、および内容理解確認用のリンキング穴埋めディクテーション問題を作成し、JSON形式で出力してください。
+
+条件：
+1. テーマ: 科学技術分野のスタートアップによる1分間の投資家向けピッチ。
+2. ビジネス要素の強化: 解決する課題、ビジネスモデル、市場規模、参入障壁、現在の実績、資金使途を含める。
+3. 語数・難易度: 150〜180語程度。CEFR B2〜C1レベル。
+4. アクセント指定: 今回のアジア・多国籍パートは「{selected_country}」を指定して作成してください。
+5. 注釈（単語リスト）: 高校レベルを超える英単語やビジネス・専門用語（5〜8個）を抽出。
+6. Key Sentences: ピッチの中で最も重要かつシャドーイング練習に最適な1〜2文を抽出。必ず意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲んだ「スラッシュ＆リズム表示形式」で出力すること。
+7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。
+8. 日本語訳: ピッチ全文（pitch_script）に対応する自然で読みやすい日本語訳を必ず作成してください。
+9. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。
+10. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（正解フレーズ部分を【正確に】 [ _____ ] と表記すること）、正解フレーズ(answer)、日本語の発音変化解説(explanation)を含めること（カタカナヒントは不要）。
+
+必ず以下のJSONキー構造を守って出力してください：
+{{
+  "pitch_script": "英語本文",
+  "key_sentences": "スラッシュと<b>タグ付き重要文",
+  "slash_script": "スラッシュと<b>タグ付き全文",
+  "vocabulary": "単語解説リスト",
+  "japanese_translation": "ピッチ全文の自然な日本語訳",
+  "quiz": [
+    {{"question": "問1", "options": ["A)...", "B)...", "C)...", "D)..."], "answer": "A", "explanation": "解説"}}
+  ],
+  "linking_dictation": [
+    {{"sentence_with_blank": "英文 [ _____ ] 英文", "answer": "正解単語", "explanation": "解説"}}
+  ]
+}}
+"""
 
 response = client.chat.completions.create(
     model='gpt-4o',
@@ -93,11 +121,15 @@ vocabulary = (
     if isinstance(data.get('vocabulary'), str)
     else 'No vocabulary generated.'
 )
-japanese_translation = (
-    data.get('japanese_translation', '').strip()
-    if isinstance(data.get('japanese_translation'), str)
-    else 'No translation generated.'
-)
+
+japanese_translation = ""
+if isinstance(data.get('japanese_translation'), str) and data.get('japanese_translation').strip():
+  japanese_translation = data.get('japanese_translation').strip()
+elif isinstance(data.get('translation'), str) and data.get('translation').strip():
+  japanese_translation = data.get('translation').strip()
+else:
+  japanese_translation = "日本語訳の取得に失敗しました。次回更新時に再生成されます。"
+
 quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
 linking_data = (
     data.get('linking_dictation', [])
@@ -126,22 +158,19 @@ generated_text = f"""【今日のアクセント指定】
 {japanese_translation}
 """
 
-# 4. 音声合成（アメリカ英語と指定アクセントを個別に生成）
+# 4. 音声合成
 os.makedirs('public', exist_ok=True)
 
-# 個別のプレイヤー用音声
 audio_us_filename = f'audio_us_{date_str}.mp3'
 audio_accent_filename = f'audio_accent_{date_str}.mp3'
 
 gTTS(text=pitch_script, lang='en', tld='com').save(f'public/{audio_us_filename}')
 gTTS(text=pitch_script, lang='en', tld=accent_info['tld']).save(f'public/{audio_accent_filename}')
 
-# バックアップ用
 with open('public/audio.mp3', 'wb') as outfile:
   with open(f'public/{audio_us_filename}', 'rb') as infile:
     outfile.write(infile.read())
 
-# 補助パーツ用音声
 key_mp3_name = f'key_{date_str}.mp3'
 gTTS(text=clean_key_sentences, lang='en', tld='com').save(f'public/{key_mp3_name}')
 
@@ -153,7 +182,7 @@ for idx, item in enumerate(linking_data):
 for idx, st in enumerate(sentence_list):
   gTTS(text=st, lang='en', tld='com').save(f'public/st_{idx}_{date_str}.mp3')
 
-# 5. HTML作成（2つの独立プレイヤーを配置）
+# 5. HTML作成
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
 linking_json_str = json.dumps(linking_data, ensure_ascii=False)
 sentences_json_str = json.dumps(sentence_list, ensure_ascii=False)
@@ -242,7 +271,6 @@ html_content = f"""<!DOCTYPE html>
   <span class="date-badge">📅 {date_str}</span>
 </div>
 
-<!-- 分離型 PLAYER (最上部固定) -->
 <div class="sticky-player">
   <div class="player-header">
     <div class="player-title">AUDIO PLAYERS</div>
@@ -256,13 +284,11 @@ html_content = f"""<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- PLAYER 1: アメリカ英語 -->
   <div class="player-box">
     <div class="player-label"><span class="badge-us">US</span> 1. 標準アメリカ英語</div>
     <audio id="player-us" controls src="{audio_us_filename}?v={timestamp}" onplay="pauseOther(this)"></audio>
   </div>
 
-  <!-- PLAYER 2: 本日指定アクセント -->
   <div class="player-box">
     <div class="player-label"><span class="badge-accent">{selected_country}</span> 2. {selected_country}アクセント</div>
     <audio id="player-accent" controls src="{audio_accent_filename}?v={timestamp}" onplay="pauseOther(this)"></audio>
@@ -447,6 +473,7 @@ html_content = f"""<!DOCTYPE html>
     }});
   }}
 
+  // 4択クイズの合否判定表示の自動追加処理
   const quizData = {quiz_json_str};
   const quizContainer = document.getElementById('quiz-container');
 
@@ -462,7 +489,6 @@ html_content = f"""<!DOCTYPE html>
 
       const expDiv = document.createElement('div');
       expDiv.className = 'quiz-exp';
-      expDiv.innerHTML = '<strong>解説:</strong> ' + (q.explanation || '');
 
       if (q.options && Array.isArray(q.options)) {{
         q.options.forEach(opt => {{
@@ -476,6 +502,7 @@ html_content = f"""<!DOCTYPE html>
             const selectedSymbol = opt.trim().charAt(0);
             if (selectedSymbol === q.answer) {{
               btn.classList.add('correct');
+              expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>解説:</strong> ' + (q.explanation || '');
             }} else {{
               btn.classList.add('incorrect');
               siblings.forEach(s => {{
@@ -483,6 +510,7 @@ html_content = f"""<!DOCTYPE html>
                   s.classList.add('correct');
                 }}
               }});
+              expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解: ' + q.answer + '）</div><br><strong>解説:</strong> ' + (q.explanation || '');
             }}
             expDiv.style.display = 'block';
           }};
@@ -500,11 +528,9 @@ html_content = f"""<!DOCTYPE html>
 </html>
 """
 
-# トップページ用 (index.html) の書き出し
 with open('public/index.html', 'w', encoding='utf-8') as f:
   f.write(html_content)
 
-# 6. メール送信
 email_body = f"""本日のシャドーイング教材が更新されました！
 
 標準アメリカ英語と{selected_country}アクセントの聴き比べプレイヤー、リンキング特化型ディクテーション（自動判定機能付き）を搭載した専用Webページが開きます。
@@ -532,7 +558,6 @@ tracking_settings.click_tracking = ClickTracking(
 )
 message.tracking_settings = tracking_settings
 
-# 添付ファイル用（アメリカ英語音声）
 with open(f'public/{audio_us_filename}', 'rb') as f:
   data = f.read()
 
