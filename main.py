@@ -60,7 +60,7 @@ prompt = f"""あなたは科学技術スタートアップの創業コンサル�
 7. スラッシュリーディング・強音表示テキスト: 全文について意味の区切りごとに / を挟み、強く発音する単語を <b>単語</b> タグで囲む。
 8. 日本語訳: ピッチ全文（pitch_script）に対応する自然で読みやすい日本語訳を必ず作成してください。
 9. 4択クイズ（3問）: ピッチ内容の把握度を確認する英語の4択問題を正確に3問作成。各問題には選択肢4つ（A, B, C, D）、正解の記号（A/B/C/D）、日本語の簡潔な解説を含める。
-10. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。前後の文脈を含む英文（正解フレーズ部分を【正確に】 [ _____ ] と表記すること）、正解フレーズ(answer)、日本語の発音変化解説(explanation)を含めること（カタカナヒントは不要）。
+10. リンキング穴埋め問題（3問）: ピッチ本文の中から、音が繋がる「リンキング現象（連結・脱落）」が起きて聞き取りづらいフレーズ（2〜3語）を3箇所抽出。元の英文（full_sentence）、正解フレーズ(answer)、日本語の発音変化解説(explanation)を含めること（カタカナヒントは不要）。
 
 必ず以下のJSONキー構造を守って出力してください：
 {{
@@ -73,7 +73,7 @@ prompt = f"""あなたは科学技術スタートアップの創業コンサル�
     {{"question": "問1", "options": ["A)...", "B)...", "C)...", "D)..."], "answer": "A", "explanation": "解説"}}
   ],
   "linking_dictation": [
-    {{"sentence_with_blank": "英文 [ _____ ] 英文", "answer": "正解単語", "explanation": "解説"}}
+    {{"full_sentence": "完全な元の英文", "answer": "穴埋めにしたい正解フレーズ", "explanation": "解説"}}
   ]
 }}
 """
@@ -131,11 +131,33 @@ else:
   japanese_translation = "日本語訳の取得に失敗しました。次回更新時に再生成されます。"
 
 quiz_data = data.get('quiz', []) if isinstance(data.get('quiz'), list) else []
-linking_data = (
+raw_linking_data = (
     data.get('linking_dictation', [])
     if isinstance(data.get('linking_dictation'), list)
     else []
 )
+
+# 単語の重複を防ぐ強力な穴埋め生成ロジック
+linking_data = []
+for item in raw_linking_data:
+  ans = item.get('answer', '').strip()
+  full_st = item.get('full_sentence', '').strip() or item.get('sentence_with_blank', '').strip()
+  
+  if ans and full_st:
+    # 既存の [ _____ ] があれば一旦元に戻すか置換
+    if '[ _____ ]' in full_st and not re.search(re.escape(ans), full_st, re.IGNORECASE):
+      sentence_with_blank = full_st
+    else:
+      # 大文字小文字を区別せず正解部分だけを厳格に [ _____ ] に置換
+      pattern = re.compile(re.escape(ans), re.IGNORECASE)
+      sentence_with_blank = pattern.sub('[ _____ ]', full_st, count=1)
+      
+    linking_data.append({
+        'sentence_with_blank': sentence_with_blank,
+        'full_sentence': full_st,
+        'answer': ans,
+        'explanation': item.get('explanation', '')
+    })
 
 clean_key_sentences = re.sub(r'<[^>]+>', '', key_sentences).replace('/', '')
 
@@ -175,7 +197,7 @@ key_mp3_name = f'key_{date_str}.mp3'
 gTTS(text=clean_key_sentences, lang='en', tld='com').save(f'public/{key_mp3_name}')
 
 for idx, item in enumerate(linking_data):
-  full_st = item.get('sentence_with_blank', '').replace('[ _____ ]', item.get('answer', ''))
+  full_st = item.get('full_sentence', '')
   if full_st:
     gTTS(text=full_st, lang='en', tld='com').save(f'public/link_{idx}_{date_str}.mp3')
 
@@ -393,16 +415,10 @@ html_content = f"""<!DOCTYPE html>
       playBtn.innerHTML = '▶ 音声を聴く';
       playBtn.onclick = () => playAudioFile(fileName);
 
-      let qSentence = item.sentence_with_blank || '';
-      const ansVal = item.answer || '';
-      if (!qSentence.includes('[ _____ ]') && ansVal) {{
-        qSentence = qSentence.replace(ansVal, '[ _____ ]');
-      }}
-
       const qText = document.createElement('div');
       qText.className = 'linking-q';
       qText.style.marginTop = '8px';
-      qText.innerHTML = '<strong>Q' + (idx+1) + ':</strong> ' + qSentence;
+      qText.innerHTML = '<strong>Q' + (idx+1) + ':</strong> ' + item.sentence_with_blank;
 
       const inputGroup = document.createElement('div');
       inputGroup.className = 'linking-input-group';
@@ -422,16 +438,16 @@ html_content = f"""<!DOCTYPE html>
 
       checkBtn.onclick = () => {{
         const userVal = normalizeText(input.value);
-        const correctVal = normalizeText(ansVal);
+        const correctVal = normalizeText(item.answer || '');
         
         input.classList.remove('is-correct', 'is-incorrect');
 
         if (userVal !== '' && userVal === correctVal) {{
           input.classList.add('is-correct');
-          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
+          expDiv.innerHTML = '<div class="status-badge correct">⭕️ Correct! 正解です！</div><br><strong>正解:</strong> <span style="color:#0f5132; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         }} else {{
           input.classList.add('is-incorrect');
-          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + ansVal + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
+          expDiv.innerHTML = '<div class="status-badge incorrect">❌ Keep trying!（正解を確認）</div><br><strong>正解:</strong> <span style="color:#dc3545; font-weight:bold;">' + item.answer + '</span><br><strong>解説:</strong> ' + (item.explanation || '');
         }}
         expDiv.style.display = 'block';
       }};
@@ -473,7 +489,6 @@ html_content = f"""<!DOCTYPE html>
     }});
   }}
 
-  // 4択クイズの合否判定表示の自動追加処理
   const quizData = {quiz_json_str};
   const quizContainer = document.getElementById('quiz-container');
 
